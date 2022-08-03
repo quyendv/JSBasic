@@ -1,0 +1,668 @@
+// Khi học JS nên học f8 đồng thời xem series: https://viblo.asia/p/kieu-du-lieu-trong-javascript-L4x5xLXg5BM#_a-data-types-1
+
+- Chú ý: JS là ngôn ngữ biên dịch - Compiler (thông dịch - Interpreter là chạy từng dòng code: python, ...)
+
+- Các hàm built-in: https://fullstack.edu.vn/learning/javascript-co-ban?id=68728d66-cf37-4998-a1ca-97e6db8b6492
+    + alert: alert('Hi Q')
+    + console: .log(...), .error(...), .warn(...). Nó ngang với print, lưu ý nếu log('a' + 'b') nó ra 'ab' nhưng log('a', 'b') thì nó là 'a b'
+    + confirm(): giống alert nhưng có xác nhận OK / Cancel
+    + prompt(): giống confirm nhưng có thêm thanh input điền thông tin
+    + setTimeout: chạy hàm truyền vào sau 1 khoảng tgian truyền vào (2 cách dưới đều hợp lệ, chú ý lambda)
+            setTimeout(function() {
+                alert('Timeout da chay')
+            }, 1000)
+    
+            setTimeout(() => {
+                alert('Timeout da chay')
+            }, 1000)
+    + setInterval: tương tự như setTimeout, tuy nhiên cứ sau khoảng tgian truyền vào sẽ chạy 1 lần, còn setTimeout chỉ hoạt động 1 lần duy nhất
+
+- Toán tử:
+    + Số học: +, -, *, /, %, ++, --, ** (mũ, giống Math.pow java)
+    + Gán: =, +=, -=, *=, /=, %=, **=
+    + Lưu ý ++ và -- kết hợp: cho a = 6, result = a++ + --a, console.log(result) ra 12 vì là 6 + 6 nhé
+    + Chuỗi (String operator): chủ yếu là hiểu cộng chuỗi
+        var name = 'Qua'
+        console.log(name + ' Quyt') <Qua Quyt>
+        hoặc, name += ' Quyt' rồi console.log
+    + Điều kiện: có 6 loại khi chuyển sang boolean sẽ là false:
+        Falsy : 0 (khác '0' or "0"), false, '' or "", undefined, NaN, null. 
+        Truthy: Còn lại convert sang đều là true
+        VD: if ('string') { console.log(true) } else{...} thì ra true
+    + So sánh: 
+        == là so sánh thông thường, 1 == '1' vẫn true vì nó ép kiểu đi (đưa về cùng kiểu) để xem có bằng nhau không. tức ktra value
+        === là so sánh cải tiến lỗi trên, nó k ép kiểu, khác kiểu auto false. tức ktra datatype và value
+        != tương tự như == nó so sánh value thôi
+        !== khác tương tự như === nó so sánh cả datatype và value
+        -> JS có hỗ trợ toán tử 3 ngôi (Ternary Operator) nhé!!
+        -> switch case như java thôi, lưu ý switch js dùng === để so sánh nên chú ý nhé
+                    switch (1 + 2) {
+                        case 1: case 2: // viết 1 hoặc nhiều dòng cũng được
+                            ...
+                            break;
+                        case 3:
+                            ...
+                            break;
+                        default:
+                            ...
+                    }
+
+
+   
+    + Toán tử logic (logical): &&, ||, !. Có lưu ý quan trọng: https://fullstack.edu.vn/learning/javascript-co-ban?id=33b26c59-13bd-4474-92ed-f1f672eb200c
+        Toán tử logic KHÔNG TRẢ VỀ TRUE/FALSE:
+            var res = 1 < 2 && 2 > 3  -> false vì true && false = false
+            var res = 'A' && 'B' && 'C' -> 'C' :D, lý do 2 số đầu là truthy, nên return tham số 3
+        
+        +) Đối với &&: giả sử có phép var res = x && y && z && t. Nếu x là truth thì res = y && z && t, nếu y tiếp tục là truthy 
+        res = z && t (Có nghĩa với phép && nếu 1 cái true thì nó k quan tâm nữa mà quan tâm đến phần sau, luật đồng nhất TRR :D)
+        Còn nếu nó gặp falsy khi duyệt từ trái sang phải thì nó return biến đó luôn
+            VD: 'A' && NaN && 'B' -> Nal -> đưa vào if nó là falsy
+
+        +) Đối với ||: Chắc gặp truthy thì return luôn còn falsy thì duyệt tiếp
+
+*** Kiểu dữ liệu: dùng console.log(typeof biến) để xem kiểu dữ liệu, typeof trả về string:
+            Undefined	        "undefined"
+            Null	            "object" (see below)
+            Boolean	            "boolean"
+            Number, NaN	        "number"
+            BigInt	            "bigint"
+            String	            "string"
+            Symbol	            "symbol"
+            Function 	        "function"
+            Any other object	"object"
+
+    - Primitive Data: Number, String, Boolean, Null, Undefined, Symbol
+    - Complex Data / Reference Type: Function, Object
+
+    - Type casting (ép kiểu): Type(oldValue), VD: let x = Number('100'), let y = String(10) or 10.toString(). Có thể dùng prefix '+' trước đối tượng để convert sang number
+
+    ** Number:
+        - Quan trọng nên phải viết lên đầu: ktra 1 tham số có phải số hay k (kiểu number). Nếu dùng typeof param === 'number' thì NaN hay biểu thức trả về NaN cũng vẫn đúng
+            -> return isNaN(value) ? false : typeof value === 'number' ? true : false; // ternary operator này không cần ngoặc vế sau vẫn đúng nhé, nó chạy lần lượt trái qua phải vẫn ok
+        - Khởi tạo thông thường và khởi tạo new (không nên dùng) 
+        - Number trong JavaScript dùng cho cả số nguyên (integer) và số thực (float), và luôn là số có dấu (signed). 
+                let a = 5, b = 2.5;  // Khai báo nhiều biến trên cùng dòng
+                let c = 12e-3;  // Số thực dạng khoa học. = 0.012
+                let d = .25;  // Rút gọn cho 0.25
+                let e =
+                    10;  // Viết trên nhiều dòng
+
+                let x = 5;
+                let y = "Hi " + x;  // y = "Hi 5"
+
+                let s1 = "2000";     // giữa hai string có nội dung số, JS sẽ cố gắng chuyển đổi thành số và thực hiện tính
+                let s2 = "10";
+                let result = s1 / s2;  // result = 200
+
+        - NaN:  var res = 20 / 'abc'
+                typeof (res) // NaN nhưng typeof NaN lại là number
+                Tuy nhiên nếu ktra res == hay === NaN đều ra false hết, phải dùng hàm isNaN(param)
+
+        - Một số hàm thông dụng:
+            Number.isFinite():              Xác định xem giá trị đã cho có phải là số hữu hạn hay không. Trả về boolean
+            Number.isInteger():	            Xác định xem giá trị đã cho có phải là số nguyên hay không. Trả về boolean
+            Number.parseFloat():	        Chuyển đổi chuỗi đã cho thành một số dấu phẩy động
+            Number.parseInt():	            Chuyển đổi chuỗi đã cho thành một số nguyên
+            Number.prototype.toString():    Chuyển đổi và trả về số đã cho dưới dạng chuỗi
+            Number.prototype.toFixed():	    Chuyển đổi và trả về CHUỖI đại diện cho số đã cho, có số chữ số chính xác sau dấu thập phân, tham số truyền vào là
+                                            số chữ số sau dấu phẩy, default 0 <-> hàm làm tròn số thông thường
+            Number.prototype.toPrecision(): https://www.w3schools.com/jsref/jsref_toprecision.asp (tự xem thêm, ôi nhớ c++ vcl)
+            ---------------------------------
+            Number.isFinite(2 / 0); // false
+            Number.isFinite(20 / 5); // true
+            Number.isFinite(0 / 0); // false
+
+            Number.isInteger(999999999); // true
+            Number.isInteger(0.2);       // false
+            Number.isInteger(Math.PI);   // false
+
+            Number.parseFloat('10') // 10
+            Number.parseFloat('10.00') // 10
+            Number.parseFloat('238,21') // 238
+            Number.parseFloat('237.22') // 237.22
+            Number.parseFloat('34 56 78') // 34
+            Number.parseFloat(' 37 ') // 37
+            Number.parseFloat('18 is my age') // 18
+
+            Number.parseInt('10') // 10
+            Number.parseInt('10.00') // 10
+            Number.parseInt('238,21') // 238
+            Number.parseInt('237.22') // 237
+            Number.parseInt('34 56 78') // 34
+            Number.parseInt(' 37 ') // 37
+            Number.parseInt('18 is my age') // 18
+
+            var numberObject = 1234.56789;
+
+            numberObject.toFixed(); // '1235'
+            numberObject.toFixed(1); // '1234.6'
+            numberObject.toFixed(6); // '1234.567890'
+
+            (11).toString();    // '11'
+            (18).toString();     // '18'
+            (17.3).toString();   // '17.3'
+
+
+    ** Boolean
+        - Lưu ý Truthy & Falsy ở trên (0, false, '', undefined, null, NaN)
+        - tip ép kiểu boolean bằng !!, VD:
+                let x = 10, y = 0;
+                !!x;  // true
+                !!y;  // false
+        - Cú pháp shorthand với điều kiện: 
+        Ta có lệnh A && B thì nếu A đúng nó sẽ xét tiếp B -> hay B đúng khi A đúng, nếu A sai nó dừng lại => đó là if đó: if (A) {B} <=> nếu A thì B
+        => Nếu bạn chỉ cần check một điều kiện true hay false để gọi tiếp một function thì có thể sử dụng AND(&&) là đủ.
+                //Longhand
+                if (isLoggedin) {
+                    goToHomepage();
+                }
+                
+                //Shorthand
+                isLoggedin && goToHomepage();
+
+        => TH khác: 
+                // Longhand:
+                let dbHost;
+                if (process.env.DB_HOST) {
+                dbHost = process.env.DB_HOST;
+                } else {
+                dbHost = 'localhost';
+                }
+
+                // Shorthand:
+                const dbHost = process.env.DB_HOST || 'localhost';
+
+        Xem thêm: https://anonystick.com/blog-developer/10-ky-thuat-shorthand-su-dung-nhieu-nhat-javascript-2021052369665399#t-7
+                  https://www.sitepoint.com/shorthand-javascript-techniques/
+        Tìm hiểu thêm: search "shorthand js"
+
+
+    ** String: 
+                JS chỉ có string, k có char, nên bọc trong cặp dấu "" hay '' đều được. Nếu String muốn hiển thị nháy đơn thì bọc bằng nháy kép và ngược lại, hoặc không thì dùng \", \', ...
+                let s1 = "I'm Vu";  // Dùng nháy kép, vì bên trong có nháy đơn
+                let s2 = 'He said "ABC" yesterday'; // Dùng nháy đơn, vì bên trong có nháy kép
+        -> Một số trường hợp code JS trong HTML event, thì phải bắt buộc dùng nháy đơn do nháy kép bị HTML attribute lấy rồi.
+        - Khởi tạo: + var biến = "..."
+                    + var biến = new String("..."), -> typeof là Object, cái này thấy giống java, không nên dùng
+        - 1 chuỗi dài quá cần xuống dòng viết code mà k tách đoạn string: có thể dùng + để nối chuỗi, oop học mình đã từng dùng ấy
+        - Template literals string ES 6: var Str = `Toi la ${firstName} ${lastName}`, CHÚ Ý là dấu ` chứ không phải ' hay " nhé và phải ${} ${} nếu cần nhiều, chứ k phải 1 dấu $ ở đầu là đủ đâu
+        - Một số method: 
+            +) .length (không có ()), .charAt(), charCodeAt(), hoặc dùng stringName[index] như n.ngữ khác, trim(), toUpperCase(), toLowerCase()
+            +) gộp: let s1 = "Hello";
+                    let s2 = "world";
+                    let s3 = s1 + " " + s2;  // Dùng phép cộng
+                    let s4 = s1.concat(" ", s2;  // Dùng method concat
+                    let s5 = [s1, s2].join(" ");  // Gom thành mảng rồi join thành chuỗi
+            +) find: indexOf(string, [startIndex]) <res of -1>, lastIndexOf
+                     search(str, [regex]): k hỗ trợ startIndex, chưa học regex nên chưa rõ regex ntn
+            +) chuỗi con: substring(start, end)
+                          substr(start, length)
+                          slice(start, [endIndex, defalut length])      
+            +) replace: string.replace(old, new). Tuy nhiên nó sẽ chỉ thay được oldStr cần thay đầu tiên thôi, những cụm sau không đổi
+                        -> dùng regex để replace all: replace(/oldStr/g, new)
+            +) split: Tách 1 string thành 1 Array theo kí tự truyền vào.
+                      "JS, PHP, Ruby".split(', ') = ["JS", "PHP", "Ruby"]
+                      tham số rỗng '' giúp tách tất cả kí tự ra mảng
+                --> tách let s = "Việt     Nam" thành mảng 2 phần tử là 2 từ thì dùng s.split(/ {1,}/)
+
+            +) repeat:
+                    'abc'.repeat(-1)    // RangeError
+                    'abc'.repeat(0)     // ''
+                    'abc'.repeat(1)     // 'abc'
+                    'abc'.repeat(2)     // 'abcabc'
+                    'abc'.repeat(3.5)   // 'abcabcabc' (count will be converted to integer)
+                    'abc'.repeat(1/0)   // RangeError
+
+            +) ES6: startWith, endWith, includes, ...
+    ** undefined: khai báo biến mà k khởi tạo giá trị thôi
+    ** null: nothing. Tuy nhiên typeof null lại bằng object :D, coi như lỗi và chấp nhận :D
+    ** Symbol: unique, xem F8 nói chung là hiểu sau
+    ** function: biến là function, chỉ chạy khi được gọi thôi
+                var myFunction = function() {
+                    alert ('demo')
+                }
+        - Truyền tham số: 1, nhiều
+        - Arguments: https://youtu.be/jE6UPl17Nvo?t=749
+            fucntion writeLog() {
+                // console.log(arguments)  // lúc này sẽ in ra như 1 mảng vậy, thay vì phải truyền nhiều tham số vào
+                for (var param of arguments) {
+                    console.log(param)     // Mỗi phần tử 1 dòng
+                    // mystring += '${param} ' với mystring tạo ngoài for, chỗ này lại là '' nhé chứ k cần `` :>, bản chất là '`${}`' nhưng k cần thiết thôi
+                }
+            }
+            writeLog('Log1', 'Log2', 'Log3')
+        - function k return thì console.log nó ra undefined
+        - các function trùng tên và số lượng tham số (kể cả tên tham số khác nhau mà cùng số lượng) thì nó luôn run cái cuối cùng
+
+        - Các loại function:
+            + Declaration function: function() {}
+            + Expression function:  var demo = function () {}
+                                    
+                                    setTimeout{ 
+                                      function [có thể đặt tên vào nhé, VD: autoLogin]() {} 
+                                    }
+
+                                    var myObj = {
+                                        myFunc: function() {}
+                                    }
+            + Arrow function: xem sau (Bài 3 - C3: https://viblo.asia/p/javascript-function-63vKjzyyK2R#_3-arrow-function-12)
+
+            -> 1 lưu ý là declaration function có tính chất hoisting: ta gọi hàm trước khi nó được định nghĩa ở bên dưới thì vẫn chạy (đọc thêm nhé, biết var, let cũng hoisting được nhưng let k khởi tạo mặc định nên lỗi còn var mặc định là undefined)
+            
+        - Parameters & Arguments:
+            + JS có thể truyền ít hoặc nhiều tham số hơn phần định nghĩa function, những param k nhận được argument (truyền thiếu) sẽ là undefined, còn những param do truyền thừa sẽ chẳng làm gì cả thôi :D vì vd định nghĩa hàm chỉ có 3 thì lấy đâu ra dùng cái 4
+            + ES6 cho default value kiểu này:
+                            function test(a, b = 100, c) {
+                                console.log(a, b, c);  // a = 10, b = 100, c = undefined
+                            }
+                            test(10);
+        - Self invoking function: (đọc thêm bài 2 phần B3 - JS người k mới)
+        - Closure: (đọc thêm bài 2 phần E)
+
+    ** Object types: có nhiều loại như Object (trùng tên nhưng khác đó, dùng nhiều nhất), Arrays, ...
+        * Object: nó giống như đối tượng trong java ấy, nhưng lại giống như dict ở python vì các cặp key-value cách nhau bởi dấu phẩy, có nhiều loại kiểu dữ liệu
+            var myObject = {
+                name: 'myName',
+                age: number,
+                adress: string, 
+                myFunc: function () {
+
+                }      
+                myOtherFunction() {
+                    console.log('Kiểu gọn mới từ ES6')  // từ ES6, tuy nhiên chỉ dùng được trong cách khai báo Object literal (tường minh cho từng đối tượng như trên), k dùng cho constructor hay prototype được
+                    // return this.prop nếu muốn trả về kiểu như getter ý
+                }  
+
+                // --> Lưu ý, khi gọi method của obj thì phải dùng obj.myFunc() chứ nếu chỉ obj.myFunc thì console.log(...) nó ra kiểu và tên hàm thôi, k ra nội dung của hàm      
+            }
+
+                --> Xem Bài 3 phần A để rõ hơn cách khởi tạo, thấy class là giống java dễ hiểu nhất
+                --> Đọc thêm về class (bài 4E): https://viblo.asia/p/javascript-object-maGK7beB5j2#_e-classes-15
+
+            -  Properties & methods:
+                // property
+                + access properties: object.property (dùng nhiều hơn) hoặc object["property"] (cũng giống kia, thường dùng khi muốn thêm key kiểu 'my-email', hoặc giả dụ có biến let emailKey = 'email', lúc này buộc phải dùng obj[emailKey] chứ k phải obj.emailKey được
+                    hoặc trong trường hợp có biến let emailKey = 'email' như trên, ở trong khai báo obj ta có [emailKey] : value thì sẽ giống như email : value, xem https://youtu.be/orIXdOPFWeM?t=383)
+                + add property: chỉ gần gán value cho nó là được, VD: object.isMale = true hoặc obj["isMale"] = false
+                + delete property: delete obj.isMale hoặc delete obj["isMale"]
+                + for in: 
+                        for (prop in obj)
+                            console.log(prop, ": ", obj[prop]);
+                    -> chú ý phải dùng obj[prop] chứ k phải obj.prop vì prop k phải thuộc tính cố định (đã test và obj.prop nó ra undefined hết)
+                + Ktra có property có trong object không: dùng 'prop' in hoặc obj.hasOwnProperty('prop')
+                        let john = { name: 'John' };
+                        'name' in john;  // true
+                        john.hasOwnProperty('name');  // true
+
+                // method
+                + Method là những function bên trong object, và các method cũng là property có value là function ẩn danh.
+
+                        let john = {
+                            name: "John",
+                            age: 20,
+                            callPolice: function() { console.log("POLICE!!!"); },
+                            callMom() { console.log("Hello Mom"); }
+                        }
+                        john.callPolice();
+                        john.callMon();
+
+                    --> Hai method trên khai báo hai cách khác nhau. Cách 1 là cách cũ trước đây, và cách 2 là cách viết method gọn hơn được giới thiệu từ ES6.
+                + add method: như add property
+                        john.callDad = function() { console.log("Hi Dad"); }
+                + delete method: không thể xóa method của object
+            
+            - Object constructor: <như đã link ở phần trên xem bài 4-A để hiểu sơ lược các cách khởi tạo, và Obj constructor là 1 trong các cách đó)
+                + Là dạng 1 function giống constructor trong class để khởi tạo nhiều obj dạng như nhau (trước ES6 phổ biến, từ ES6 đã có class), có nhiều constructor sẵn như Object(), Number(), String(), ...
+                        function User(firstName, lastName, avatar) { // có thể dùng Expression fucntion k sao cả, nhưng arrow function lại lỗi nhiều thứ liên quan đến this :D <search stackoverflow là thấy> vậy nên khởi tạo còn k được chứ k nói đến việc thêm prototype prop
+                            this.firstName = firstName;
+                            this.lastName = lastName;
+                            this.avatar = avatar;
+                        }
+                        // tạo 2 obj thử
+                        let author = new User('author', 'noLastName', 'avatar') // --> console.log(author) sẽ có phần [[Prototype]]: có constructor <f User...> và [[Prototype]]: Object <...>
+                        let user = new User('user', 'noLastName', 'avatar')     // --> console.log( user ) sẽ có phần [[Prototype]]: có constructor <f User...> và [[Prototype]]: Object <...> 
+                        // --> có thể dùng author.constructor để xem function và nó === với User
+                        // --> có thể thêm thuộc tính riêng kiểu author.title = ... còn user.comment = ...
+                        // --> có thể thêm thuộc tính chung kiểu User.prototype.address = 'unknow' (Xem bài 4 phần C3) hoặc thêm luôn vào phần định nghĩa object constructor
+
+            - Object prototype: 
+                + Như đã nói ở trên, ta có thể thêm thuộc tính / phương thức cho object constructor bằng cách viết ở trong định nghĩa, hoặc ở ngoài bằng:
+                        User.prototype.className = 'F8'
+                        User.prototype.getClassName = function() {  // --> thử User.prototype.getClassName() { return this.className } không được vì nó chỉ dùng trong khởi tạo kiểu object literal -> k nên dùng thì hơn vì chỗ được chỗ k, dễ rối
+                            return this.className;
+                        }
+                    --> Lưu ý các property/method thêm ở ngoài kiểu này khi console.log sẽ thấy ở trong phần prototype thôi nhé
+
+
+        * Array: Cho phép chứa nhiều kiểu dữ liệu khác nhau (giống python) và không giới hạn số phần tử như 1 số ngôn ngữ khác
+                let primes = [2, 3, 5, 7];
+                let names = ["Vu", "John"];
+                let points = ["Vu", 10, "John", 9.5];
+                let empty = [];
+
+            - Cách khởi tạo: ngoài = [...] ra còn dùng = new Array(1, 2, '3', null, function(){}...) nữa (k cần []) nhưng k nên    
+                -> hay dùng là let arr = [] // khởi tạo mảng rỗng, sau đó thêm từng phần tử theo index tuần tự kiểu for loop arr[i] = ... để thêm phần tử vào mảng
+                tuy nhiên phải cực kì lưu ý nếu dùng cách này vì sẽ dễ sai length (xem bên dưới) nếu i k tuần tự liên tiếp nhau. tốt nhất nên add bằng push, shift
+
+            - Ktra Array: vì Object (dạng {...}) và Array đều có typeof là 'object' nên phải dùng Array.isArray(arrayName) hoặc arr instanceof Array (giống java)
+                
+            - Array có typeof là Object nên so sánh == hay === hay Objectis() đều là so sánh địa chỉ, mà object khác nhau có địa chỉ khác nhau, -> luôn false
+            Để so sánh giá trị 2 Array thì chỉ có duyệt qua từng phần tử
+
+            - length: như trên, thì length là thuộc tính not phương thức (length() là sai). Và đặc biệt nó lấy index cao nhất + 1 ra length
+            VD: let a = [0, 1, 2, 3];    thì lúc này length là 7 (6 + 1) và nó trông như thế này [0, 1, 2, 3, empty, empty, 6]
+                a[6] = 6;
+
+            -> thêm phần tử 1 cách an toàn, sử dụng 
+                + unshift và push
+                    let primes = [5];
+                    primes.push(7);  // Thêm 7 vào cuối
+                    primes.unshift(2, 3);  // Thêm 2, 3 vào đầu
+                        // Primes = [2, 3, 5, 7]
+
+                + shift và pop:
+                    primes.pop();  // 7
+                    primes.shift();  // 2
+                        // Primes = [3, 5]
+
+                + Thêm 1/nhiều phần tử vào vị trí chỉ định: splice()
+                    const fruits = ["Banana", "Orange", "Apple", "Mango"];
+                    fruits.splice(2, 0, "Lemon", "Kiwi");
+                    -> Tham số đầu tiên là vị trí phần tử mới được thêm
+                    -> Tham số thứ 2 là số phần tử bị xóa
+                    -> Các tham số sau là các phần tử thêm vào
+                    ==> mảng thành [Banana, Orange, Lemon, Kiwi, Apple, Mango]
+                    Ta cũng có thể dùng splice() để vừa thêm vừa xóa.
+
+                    const fruits = ["Banana", "Orange", "Apple", "Mango"];
+                    fruits.splice(2, 2, "Lemon", "Kiwi");       -> Banana, Orange, Lemon, Kiwi
+
+                + Delete 1 phần tử ngẫu nhiên: delete primes[2];  // Xóa phần tử thứ 3 -> xóa kiểu này length không đổi, value rỗng thôi
+                    -> Sử dụng slice(index, countOfElements):
+                    const fruits = ["Banana", "Orange", "Apple", "Mango"];
+                    fruits.splice(0, 1);    -> xóa 1 phần tử đầu
+
+                    -> Slice(startIndex) có thể dùng để cắt thành 1 mảng mới, vd:
+                    const fruits = ["Banana", "Orange", "Lemon", "Apple", "Mango"];
+                    const citrus = fruits.slice(1); -> cắt từ phần tử index 1
+                    Tuy nhiên sao chép mảng có thể dùng spread operator thay vì arr1.slice(0)
+                    -> Lưu ý slice() tạo mảng mới, k thay đổi trên mảng cũ
+
+                + Xóa toàn bộ mảng: gán cho nó mảng rỗng [] hoặc đặt length thành 0.
+            - other function built-in: xem Bài 2 phần F trở xuống: https://viblo.asia/p/kieu-du-lieu-trong-javascript-L4x5xLXg5BM#_f-array-2-20
+                Cho let arr = ['JS', 'PHP', 'C++'] 
+                + toString()
+                + join(): ngược với split của string thôi
+                    arr.join(): JS,PHP,C++ -> không có tham số truyền vào thì giống như toString()
+                    arr.join(''): hiểu ngăn cách là xâu rỗng -> viết liền nhau -> JSPHPC++
+                    arr.join(', ' hoặc ' - ') hay dùng hơn
+                + concat, nhưng nối chuỗi bằng cách khác được (spread operator (ES6))
+                + indexOf, lastIndexOf -> return index first/last element or -1
+                + include(value): true/false, check tồn tại value trong mảng k, có thể dùng arr.indexOf(value) !== -1 nhưng include() tường minh hơn
+                + fill(value, start, end): bỏ end thì từ start đến cuối, bỏ 2 tham số sau thì fill all
+                + Array.of(1, 2, 3) <giống = [1, 2, 3] và Array.from(): xem trong link để rõ hơn, có thể giống Map
+                        
+                        let a = document.getElementsByTagName('img');
+                        let b = Array.from(a);
+
+                        hoặc 
+
+                        let a = [1, 2, 3];
+                        let b = Array.from(a, function (value) {
+                            return value * 2;
+                        });
+                
+                + sort() và reverse(): sắp xếp mảng tăng và giảm, nhưng theo chuỗi (string sort), phải dùng cách dưới
+                + arr.sort(function(a, b) {return a - b}) hoặc arr.sort((a, b) => a - b); hoặc b - a nếu giảm dần
+                + Tìm max, min: các Math.max()/min() method không nhận mảng nên cần dùng kiểu khác
+                    Math.max.apply(null, arr), tương tự với min, tham số null không cần quan tâm vì k truyền object nào vào
+                    --> Dùng seperate operator: https://viblo.asia/p/su-dung-spread-operator-trong-javascript-gDVK24welLj
+                        Math.max(...arr) là xong :D, tương tự với min
+
+*** Math: phổ biến 
+    - Math.PI, Math.round(), Math.ceil(), Math.floor(), Math.min(), Math.max(), ...
+    - Math.random() như java đã note ảnh, nó return [0, 1), 
+        muốn từ [begin, end] thì kiểu Math.floor(Math.random() * n) + begin nếu muốn từ [begin, end] với n = end - begin + 1
+        muốn từ [begin, end) thì chỉnh n đi tý thôi: n = end - begin
+        --> để dễ nhớ thì cứ biết rằng n là số các số CÓ THỂ ĐẠT ĐƯỢC trong phạm vi
+        --> Math.random() chính là ép kiểu (int) trong java đó, JS cũng có Number.parseInt() mỗi tội hơi dài :D
+*** Ngoại lệ document.all: 
+        - document.all chuyển sang boolean (!!document.all) sẽ là false
+        - document.all khi là toán hạng của so sánh == và != sẽ là undefined
+        - khi typeof document.all sẽ return undefined  
+
+*** Làm việc với mảng (nâng cao) Array iteration methods:
+    ** Loop:  JS có for thường (for loop), for of (for each trong ngôn ngữ khác) và for in (dùng trong object - giống map, duyệt key và làm việc với value)
+        VD: let obj = {
+                name: "John",
+                age: 20
+            }
+            for (p in obj)
+                console.log(p + ": " + obj[p]);  // chú ý không phải obj.p và obj["p"]
+        -> giải quyết vấn đề k lưu index của duyệt mảng, dùng method forEach():
+                a.forEach(function(value, index, array) {
+                    ...
+                });
+
+                hoặc a.forEach( (value, index, array) => {} ) hoặc a.forEach( value => {} ) nếu chỉ cần value
+        -> Hàm callback trên có 3 tham số, nhưng có thể bỏ đi hai tham số sau nếu không cần thiết, chỉ cần giữ lại value. 
+        Với method forEach() có tới 3 tham số như trên, chúng ta có thể vừa biết value, vừa biết được index đang ở vị trí nào, vừa có thể truy cập array. 
+        Quá tiện phải không, nhưng bù lại thì tốc độ sẽ chậm hơn.
+
+    ** Map method: 
+        - Tạo mảng mới có độ dài giống mảng ban đầu, nhưng các phần tử có giá trị được tính toán, biến đổi mới lại theo một cách nào đó.
+                let a = [1, 2, 3, 4];
+                let b = a.map(function(value) {  // Đã rút gọn callback
+                    return value * 2;
+                });
+                // b = [2, 4, 6, 8]
+
+    ** Filter method:
+        - Trả về mảng mới, gồm các phần tử nào trong mảng cũ khớp với điều kiện gì đó.
+                let primes = [2, 3, 5, 7, 11, 13];
+                let primes_smaller_than_10 = primes.filter(function(value) {
+                    return value < 10;
+                });
+                // b = [2, 3, 5, 7]
+
+    ** Every, some method:
+        - Toàn bộ method trả về boolean, every() kiểm tra mảng có tất cả phần tử hợp điều kiện, trong khi some() chỉ cần một phần tử khớp điều kiện cho là ok.
+                let primes = [2, 3, 5, 7, 11];
+                let is_odd_all = primes.every(function(value) {
+                    return value % 2 === 1;
+                });  // false
+                let any_bigger_than_10 = primes.some(function(value) {
+                    return value > 10;
+                });  // true
+    ** Find, findIndex: 
+        - Dùng trả về vị trí một value trong mảng. find() trả về value, trong khi findIndex() trả về index 
+        của value tìm thấy (phần tử đầu tiên). Nếu không có, find() trả về undefined và findIndex() trả về -1.
+        
+        - Lưu ý "find" ở đây không chỉ đơn thuần là tìm một giá trị trong mảng, mà chính xác hơn nó tìm phần tử 
+        đầu tiên khớp với một điều kiện nào đó.
+                let a = [3, 5, 2, 13, 4];
+                let pos = a.findIndex(function(value) {
+                    return value > 10;
+                });
+                // pos = 3
+    ** Reduce, reduceRight:
+        - Hiểu đơn giản là giảm mảng thành tổng: từ 1 array nhiều phần tử reduce xuống còn 1 gtri duy nhất
+                let a = [1, 2, 3, 4, 5];
+                let sum = a.reduce(function(prevValue, value, index, array) {       // ở đây chỉ là tên 4 biến, có thể thay đổi, hoặc thậm chí bỏ 2 tham số sau nếu k dùng vẫn pass
+                    return prevValue + value;
+                });
+                // sum = 15
+            -> callback(hiểu sau) có thêm tham số prevValue (đóng vai trò là sum), nó giống sum = sum cũ + value vẫn làm thôi
+        - reduceRight(): tương tự, từ phải qua thôi
+
+    ** Arrow Function (ES6)
+    		let b = a.map((value, index, array) => {})
+		hay let b = a.map (value => {})
+
+*** Date Object: làm việc với thời gian  
+        - let current = new Date(): lấy thời điểm hiện tại, giá trị tĩnh chứ k tự thay đổi
+        - let birthday = new Date(2001, 7, 27, 6, 30, 0, 0): year-month(tính từ 0)-day-hour-second-msec
+            + Chú ý, nếu tham số year nhập 1 hoặc 2 giá trị thì nó hiểu là 19ab
+            + month từ 0, month = 7 tức tháng 8
+        - let root = new Date(0): truyền vào ms (có thể là số cực lớn), gốc là 1/1/1970, 00:00:00, cũng có thể truyền vào ms âm, tức lùi về trước gốc
+    ** Date format: let birthday = new Date ("August 27, 2001 06:30:00");
+        - Chuẩn ISO Date:
+            + 2001-08-27, 2001-08, 2001   
+            + 2001-08-27T06:30:00Z Trong đó "T" phân tách ngày và tgian, "Z" cho biết đây là time UTC tức múi giờ GMT(0), có thể bỏ đi và thay bằng 2001-08-27T06:30:00+07:30, thay "Z" bằng +hh:mm hay -hh:mm đều được.
+        - Chuẩn Long Date:
+            + Long Date trong JS có dạng MMM DD yyyy trong đó dùng space tách ra. Năm luôn ở cuối và ngày tháng có thể đổi chỗ cho nhau
+                let d1 = new Date("August 27 2001")
+                let d2 = new Date("27 Aug 2001")
+            + Tháng có thể viết tăt hoặc đầy đủ, không phân biệt hoa thường.
+        - Chuẩn Short Date: dạng MM/dd/yyyy
+    ** Date getter, setter: xem thêm https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date
+        - Get method: <chú ý month và day tính từ 0, sunday là 0)
+                let d = new Date("2001-08-27");
+                d.getTime();  // Số miligiây từ 1/1/1970 00:00:00 UTC
+                d.getFullYear();  // 2001
+                d.getMonth();  // 7, vì tháng 8 là index 7, nên thường dùng kiểu getMonth() + 1 cho đúng :D
+                d.getDate();  // 1-31, date là ngày trong tháng
+                d.getDay()  // 0-6, day là ngày trong tuần, Chủ nhật là 0
+            Chú ý các method lấy thời gian cần có s:
+                d.getHours();
+                d.getMinutes();
+                d.getSeconds();
+                d.getMiliseconds();  // return a value 0-999, chả rõ lắm :D
+        - Set method: tương tự get nhưng truyền vào các tham số
+                let d = new Date();
+                d.getMonth();  // return 7
+                d.setMonth(7);  // no return
+
+        ==> dễ dàng in ra kiểu (`${getDate()}/${getMonth() + 1}/${getFullYear()}`) cho giống VN :D
+    ** Date actions: 
+        - Display date: tham khảo toString() và toUTCString() trong p2 series: https://viblo.asia/p/kieu-du-lieu-trong-javascript-L4x5xLXg5BM#_1-date-object-30
+        - Chỉ muốn lấy msec của 1 chuỗi ngày cụ thể mà k cần tạo date object (thường thì phải tạo đối tượng date rồi getMiliseconds()), ta dùng 
+                let msec = Date.parse("August 27, 2001") // OK nhé
+                let d = new Date (msec)
+        - So sánh: các date lưu số msec nên có thể so sánh. Search stackoverflow có (compare date js): hình như dùng getTime() để so sánh như bth
+        - Cập nhật current time:
+                let d = new Date("2001"); 
+                d.setTime(Date.now()); // Date.now() trả về msec hiện tại
+        - Cộng trừ thêm ngày: 
+                let today = new Date()
+                let tomorrow = new Date()
+                tomorrow.setDate(today.getDate() + 1)
+        - Tính khoảng thời gian giữa 2 ngày: không có, ta dùng cách tính hiệu số msec chia cho số msec trong 1 ngày, chỉ gần đúng nhưng vẫn dùng đc nếu k cần chính xác cao
+                let d1 = new Date("2001-07-27")
+                let d2 = new Date()
+                let days_between = (d2.getTime() - d1.getTime()) / (1000 * 3600 * 24) // trên stackoverflow họ làm tròn lên hoặc xuống : Math.ceil() or Math.floor()
+
+1. Scope:
+    * Global scope: 
+        - Các đối tượng, biến, hằng, hàm, object,... được khai báo bên ngoài tất cả function, block thì có global scope. Lúc này chỉ khi đóng tab trình duyệt thì đối tượng global mới bị hủy.
+            // Here is global
+            function ABC() {
+                // Not here
+            }
+            {
+                var x = 10;  // Global scope, vì var không bị chặn bởi {}
+                let x = 10;  // Block scope, vì let bị {} chặn -> block scope
+            }
+        - Chú ý, nếu gán một biến mà không có từ khóa khai báo (const, let, var) thì nó sẽ trở thành global variable (biến toàn cục) và mặc định có global scope, dù cho nó được khai báo ở đâu.
+            function ABC() {
+                x = 10;  // x is global
+            }
+            // Here x = 10
+    * Function scope: 
+        - Các đối tượng được khai báo bên trong hàm, và không thuộc block scope thì có function scope.
+
+            function ABC() {
+                var x = 10;  // Function scope
+                let y = 5;  // Function scope
+                for (let i = 0; i < 5; i++) {
+                    // i has block scope
+                    var a = 2;  // Function scope, vì var không bị {} chặn
+                    let b = 1;  
+                        // Block scope, vì let bị {} của for chặn
+                        // nên trở thành block scope
+                }
+            }
+
+        - Các tham số của hàm cũng được tính là function scope.
+    
+    * Block scope:
+        - Hai từ khóa được bổ sung trong ES6 là let và const cho phép một đối tượng khai báo có thể có block scope.
+        - Block scope là phạm vi chỉ trong một block, là nằm trong khối {}. Trong một số trường hợp, như vòng lặp for ở ví dụ trên, thì biến let i cũng được tính vào trong block.
+
+            {
+                let x = 10;  // Block scope
+                var y = 10;  // Not block scope
+            }
+
+        - Ta nói let và const trong một khối {}, sẽ bị chặn bởi khối đó và có block scope. Còn var không bị {} chặn, nên nó vẫn sẽ giữ được scope trước đó.
+        - Hành vi của block scope là giống với những ngôn ngữ khác, do đó nó được khuyến khích sử dụng. Đó là lí do nên dùng const hay let thay cho var khi khai báo.
+
+2. Hoisting:
+    * Sử dụng trước, định nghĩa/khai báo sau
+        - Function được tự động hoisting (như arrow function thì không).
+        - Các đối tượng khai báo bằng var luôn được hoisting, trong khi khai báo với let hoặc const thì không. Cụ thể:
+            + var: khi chưa được định nghĩa nó có giá trị khởi tạo: undefined, sau khi định nghĩa thì nó mới có value
+            + biến let cũng được kéo lên đầu khi biên dịch: tuy nhiên let k có giá trị khởi tạo nào nên sử dụng trước khi khai báo sẽ lỗi Reference Error
+
+
+*** Các vấn đề tự mày mò ra trong JS:
+    ** Swap: 
+        - Có thể dùng kiểu a += b - (b = a) như java cho js nhé :d
+                    let x = 1;
+                    let y = 2;
+                    console.log(`x = ${x} & y = ${y}`);
+
+                    x += y - (y = x);
+                    console.log(`x = ${x} & y = ${y}`);
+
+            --> result: x = 1 & y = 2
+                        x = 2 & y = 1
+    
+    ** Check a string is a valid number: https://stackoverflow.com/questions/175739/how-can-i-check-if-a-string-is-a-valid-number
+        - dùng hàm NaN (khá khó hiểu): nhận 'foo' hay '10px' return true trong khi '' hay ' ' lại false
+            ->  if (typeof str != "string") return false // we only process strings!  
+                return !isNaN(str) && // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
+                        !isNaN(parseFloat(str)) // ...and ensure strings of whitespace fail
+                }
+        - dùng regex (tối ưu):
+            + isNumeric: 
+                function isNumeric(value) {
+                    return /^-?\d+$/.test(value);
+                }
+
+            + chỉ nhận số dương: return /^\d+$/.test(value);
+    
+    ** Format number phân chia 3 chữ số bằng ',' hoặc '.', ... : https://stackoverflow.com/questions/2901102/how-to-print-a-number-with-commas-as-thousands-separators-in-javascript
+        - Dấu phẩy: dùng regex
+                function numberWithCommas(x) {
+                    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                }
+        - Dấu chấm tương tự
+            -> tuy nhiên chú ý phải cho dấu thập phân với dấu phân cách 3 chữ số phải khác nhau nhé
+    ** Seperate Operator: https://viblo.asia/p/su-dung-spread-operator-trong-javascript-gDVK24welLj
+        - Max, min arr: Math.max(...arr)
+        - Sao chép mảng, tách string thành characters, kết hợp thuộc tính của obj
+                [...["😋😛😜🤪😝"]] // Array [ "😋😛😜🤪😝" ]
+                [..."🙂🙃😉😊😇🥰😍🤩!"] // Array(9) [ "🙂", "🙃", "😉", "😊", "😇", "🥰", "😍", "🤩", "!" ]
+
+                const hello = {hello: "😋😛😜🤪😝"}
+                const world = {world: "🙂🙃😉😊😇🥰😍🤩!"}
+
+                const helloWorld = {...hello,...world}
+                console.log(helloWorld) // Object { hello: "😋😛😜🤪😝", world: "🙂🙃😉😊😇🥰😍🤩!" }
+        - Thêm phần tử vào mảng:
+                const fewFruit = ['🍏','🍊','🍌']
+                const fewMoreFruit = ['🍉', '🍍', ...fewFruit] //thêm các phần tử của mảng fewFruit vào mảng fewMoreFruit
+                console.log(fewMoreFruit) //  Array(5) [ "🍉", "🍍", "🍏", "🍊", "🍌" ]
+
+        - Mảng sao chép bằng seperate operator giống như tạo vùng nhớ khác trong ngôn ngữ khác nên k ảnh hưởng đến mảng gốc như gán bằng
+                const array = ['😉','😊','😇']
+                const copyWithEquals = array // Thay đổi mảng array đồng nghĩa cũng sẽ thay đổi mảng copyWithEquals
+                const copyWithSpread = [...array] // Thay đổi mảng array sẽ không ảnh hưởng đến mảng copyWithSpread
+
+                array[0] = '😡' //thay đổi phần tử đầu tiên của mảng array
+
+                console.log(...array) // 😡 😊 😇
+                console.log(...copyWithEquals) // 😡 😊 😇
+                console.log(...copyWithSpread) // 😉 😊 😇
