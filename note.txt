@@ -5,6 +5,7 @@
 - Các hàm built-in: https://fullstack.edu.vn/learning/javascript-co-ban?id=68728d66-cf37-4998-a1ca-97e6db8b6492
     + alert: alert('Hi Q')
     + console: .log(...), .error(...), .warn(...). Nó ngang với print, lưu ý nếu log('a' + 'b') nó ra 'ab' nhưng log('a', 'b') thì nó là 'a b'
+        -> ngoài ra nên tham khảo console.table(), có thể truyền vào 1 obj, cũng có thể format cho in ra gì: https://youtu.be/-JMh3A556cw?t=902
     + confirm(): giống alert nhưng có xác nhận OK / Cancel
     + prompt(): giống confirm nhưng có thêm thanh input điền thông tin
     + setTimeout: chạy hàm truyền vào sau 1 khoảng tgian truyền vào (2 cách dưới đều hợp lệ, chú ý lambda)
@@ -192,13 +193,13 @@
             +) gộp: let s1 = "Hello";
                     let s2 = "world";
                     let s3 = s1 + " " + s2;  // Dùng phép cộng
-                    let s4 = s1.concat(" ", s2;  // Dùng method concat
+                    let s4 = s1.concat(" ", s2);  // Dùng method concat: giống như method của mảng có 2 dạng là value.concat(val2, val3, ...) hoặc concat(val1, val2, val3, ...), k làm thay đổi string tồn tại, chỉ trả về 1 string mới
                     let s5 = [s1, s2].join(" ");  // Gom thành mảng rồi join thành chuỗi
             +) find: indexOf(string, [startIndex]) <res of -1>, lastIndexOf
                      search(str, [regex]): k hỗ trợ startIndex, chưa học regex nên chưa rõ regex ntn
             +) chuỗi con: substring(start, end)
                           substr(start, length)
-                          slice(start, [endIndex, defalut length])      
+                          slice(start, [endIndex: defalut length])      
             +) replace: string.replace(old, new). Tuy nhiên nó sẽ chỉ thay được oldStr cần thay đầu tiên thôi, những cụm sau không đổi
                         -> dùng regex để replace all: replace(/oldStr/g, new)
             +) split: Tách 1 string thành 1 Array theo kí tự truyền vào.
@@ -282,8 +283,9 @@
 
             -  Properties & methods:
                 // property
-                + access properties: object.property (dùng nhiều hơn) hoặc object["property"] (cũng giống kia, thường dùng khi muốn thêm key kiểu 'my-email', hoặc giả dụ có biến let emailKey = 'email', lúc này buộc phải dùng obj[emailKey] chứ k phải obj.emailKey được
-                    hoặc trong trường hợp có biến let emailKey = 'email' như trên, ở trong khai báo obj ta có [emailKey] : value thì sẽ giống như email : value, xem https://youtu.be/orIXdOPFWeM?t=383)
+                + access properties: object.property hoặc object["property"] (cũng giống kia, thường dùng khi tên key dạng có dấu '-' '_', ...,<không giống tên biến bình thường ấy> 
+                    hoặc giả dụ có biến let emailKey = 'email', lúc này buộc phải dùng obj[emailKey] chứ k phải obj.emailKey được hoặc trong trường hợp có biến let emailKey = 'email' như trên, 
+                    ở trong khai báo obj ta có [emailKey] : value thì sẽ giống như email : value, xem https://youtu.be/orIXdOPFWeM?t=383)
                 + add property: chỉ gần gán value cho nó là được, VD: object.isMale = true hoặc obj["isMale"] = false
                 + delete property: delete obj.isMale hoặc delete obj["isMale"]
                 + for in: 
@@ -305,7 +307,7 @@
                             callMom() { console.log("Hello Mom"); }
                         }
                         john.callPolice();
-                        john.callMon();
+                        john.callMom();
 
                     --> Hai method trên khai báo hai cách khác nhau. Cách 1 là cách cũ trước đây, và cách 2 là cách viết method gọn hơn được giới thiệu từ ES6.
                 + add method: như add property
@@ -340,8 +342,15 @@
                 let names = ["Vu", "John"];
                 let points = ["Vu", 10, "John", 9.5];
                 let empty = [];
+                --> mảng 2 chiều: 
+                        let arr2d = [
+                            [1, 2],
+                            [2, 3], 
+                            [3, 4]
+                        ]
 
             - Cách khởi tạo: ngoài = [...] ra còn dùng = new Array(1, 2, '3', null, function(){}...) nữa (k cần []) nhưng k nên    
+                -> nếu dùng new Array() truyền 1 đối số thì là length (khởi tạo thì các element là empty: undefined), còn từ 2 đối số trở lên thì là các phần tử của mảng. Có nghĩa nếu khởi tạo new Array(10) sẽ có 10 phần tử undefined, có push thêm 2 phần tử nữa length là 12 những 10 phần tử trước vẫn undefined
                 -> hay dùng là let arr = [] // khởi tạo mảng rỗng, sau đó thêm từng phần tử theo index tuần tự kiểu for loop arr[i] = ... để thêm phần tử vào mảng
                 tuy nhiên phải cực kì lưu ý nếu dùng cách này vì sẽ dễ sai length (xem bên dưới) nếu i k tuần tự liên tiếp nhau. tốt nhất nên add bằng push, shift
 
@@ -379,7 +388,8 @@
                     fruits.splice(2, 2, "Lemon", "Kiwi");       -> Banana, Orange, Lemon, Kiwi
 
                 + Delete 1 phần tử ngẫu nhiên: delete primes[2];  // Xóa phần tử thứ 3 -> xóa kiểu này length không đổi, value rỗng thôi
-                    -> Sử dụng slice(index, countOfElements):
+                    -> Bản chất lại cắt mảng cũ thành mảng mới: những phần tử bị bỏ lại k lấy nên coi như xóa thôi
+                    -> Sử dụng slice(startIndex, endIndex):   // index nhận giá trị âm (là từ cuối mảng nhé)
                     const fruits = ["Banana", "Orange", "Apple", "Mango"];
                     fruits.splice(0, 1);    -> xóa 1 phần tử đầu
 
@@ -397,9 +407,14 @@
                     arr.join(): JS,PHP,C++ -> không có tham số truyền vào thì giống như toString()
                     arr.join(''): hiểu ngăn cách là xâu rỗng -> viết liền nhau -> JSPHPC++
                     arr.join(', ' hoặc ' - ') hay dùng hơn
-                + concat, nhưng nối chuỗi bằng cách khác được (spread operator (ES6))
+                + concat, nhưng nối chuỗi bằng cách khác được (spread operator (ES6)), arr = [1, 2, ...otherArr] : nối thêm mảng khác vào 
+                    -> phép nối arr1.concat(arr2) trả về 1 mảng mới được gộp, HOÀN TOÀN KHÔNG THAY ĐỔI MẢNG CŨ, dòng code arr1.concat(arr2) k gán chả có ý nghĩa gì
+                    -> ta có thể nối 2 mảng vào 1 mảng mới kiểu let arr3 = [].concat(arr1, arr2), arr3 = arr1.concat(arr2) hoặc gộp từ mảng 2 vào mảng 1 kiểu arr1 = arr1.concat(arr2)
                 + indexOf, lastIndexOf -> return index first/last element or -1
                 + include(value): true/false, check tồn tại value trong mảng k, có thể dùng arr.indexOf(value) !== -1 nhưng include() tường minh hơn
+                    -> chỉ có trong Array và String
+                    -> syntax: include(val, startPosition(với string) or startIndex(với array): default = 0, chú ý có thể truyền -1 để tìm từ cuối về, -2, -3, ...)
+                    -> bản chất truyền position âm là dấu '-' để hiểu rằng tìm từ cuối, còn index sẽ là (length + -1) là phần tử cuối, (length + -2) là phần tử cạnh phần tử cuối, ...
                 + fill(value, start, end): bỏ end thì từ start đến cuối, bỏ 2 tham số sau thì fill all
                 + Array.of(1, 2, 3) <giống = [1, 2, 3] và Array.from(): xem trong link để rõ hơn, có thể giống Map
                         
@@ -417,52 +432,52 @@
                 + arr.sort(function(a, b) {return a - b}) hoặc arr.sort((a, b) => a - b); hoặc b - a nếu giảm dần
                 + Tìm max, min: các Math.max()/min() method không nhận mảng nên cần dùng kiểu khác
                     Math.max.apply(null, arr), tương tự với min, tham số null không cần quan tâm vì k truyền object nào vào
-                    --> Dùng seperate operator: https://viblo.asia/p/su-dung-spread-operator-trong-javascript-gDVK24welLj
+                    --> Dùng spread operator: https://viblo.asia/p/su-dung-spread-operator-trong-javascript-gDVK24welLj
                         Math.max(...arr) là xong :D, tương tự với min
 
-*** Math: phổ biến 
-    - Math.PI, Math.round(), Math.ceil(), Math.floor(), Math.min(), Math.max(), ...
-    - Math.random() như java đã note ảnh, nó return [0, 1), 
-        muốn từ [begin, end] thì kiểu Math.floor(Math.random() * n) + begin nếu muốn từ [begin, end] với n = end - begin + 1
-        muốn từ [begin, end) thì chỉnh n đi tý thôi: n = end - begin
-        --> để dễ nhớ thì cứ biết rằng n là số các số CÓ THỂ ĐẠT ĐƯỢC trong phạm vi
-        --> Math.random() chính là ép kiểu (int) trong java đó, JS cũng có Number.parseInt() mỗi tội hơi dài :D
-*** Ngoại lệ document.all: 
-        - document.all chuyển sang boolean (!!document.all) sẽ là false
-        - document.all khi là toán hạng của so sánh == và != sẽ là undefined
-        - khi typeof document.all sẽ return undefined  
 
 *** Làm việc với mảng (nâng cao) Array iteration methods:
-    ** Loop:  JS có for thường (for loop), for of (for each trong ngôn ngữ khác) và for in (dùng trong object - giống map, duyệt key và làm việc với value)
+    ** Loop:  JS có for thường (for loop), for of (for each trong ngôn ngữ khác) và for in (dùng trong object - giống map, duyệt key và làm việc với value; cũng dùng trong array với key trong for in sẽ là index nhé !!)
+        --> hay nói cách khác, khi làm với mảng: for in ta lấy key còn for of lấy value. Còn kiểu object thì k dùng được for of (vì object k phải iterable, ta có thể dùng Object.keys(obj) hoặc Object.values(obj))
+        
+        --> Lưu ý với for in sẽ duyệt cả các prototype tự tạo kiểu Array.prototype.forEach2, nên để chỉ duyệt qua các phần tử thông thường (k nằm trong phần prototype)
+        ta dùng this.hasOwnProperty(index), xem kĩ ở: https://youtu.be/zfEBuHWif4Q?t=762
+            --> đó là lý do eslint cảnh báo khi dùng for-in đó
+            --> Tuy nhiên for-in lại k duyệt qua các phần tử trống do khởi tạo length hay xóa k đúng cách giống như for loop thông thường
+            ==> áp dụng 2 điều trên: hasOwnProperty và đặc điểm k duyệt qua empty element của for-in để rebuilt lại callback
+
         VD: let obj = {
                 name: "John",
                 age: 20
             }
-            for (p in obj)
+            for (p in obj)          // for in đối với object
                 console.log(p + ": " + obj[p]);  // chú ý không phải obj.p và obj["p"]
-        -> giải quyết vấn đề k lưu index của duyệt mảng, dùng method forEach():
+        -> giải quyết vấn đề k lưu index của duyệt mảng bằng for of, dùng method forEach():
                 a.forEach(function(value, index, array) {
                     ...
                 });
 
                 hoặc a.forEach( (value, index, array) => {} ) hoặc a.forEach( value => {} ) nếu chỉ cần value
+
         -> Hàm callback trên có 3 tham số, nhưng có thể bỏ đi hai tham số sau nếu không cần thiết, chỉ cần giữ lại value. 
         Với method forEach() có tới 3 tham số như trên, chúng ta có thể vừa biết value, vừa biết được index đang ở vị trí nào, vừa có thể truy cập array. 
         Quá tiện phải không, nhưng bù lại thì tốc độ sẽ chậm hơn.
 
-    ** Map method: 
+    ** Map method: cú pháp đầy đủ có thể truyền 3 tham số (obj trong mảng, index, originArr) <tên đặt tùy ý nhưng ý nghĩa biến là cố định>, tuy nhiên thường dùng mỗi thuộc tính đầu - element
+        - So sánh nhỏ giữa forEach và map: https://viblo.asia/p/so-sanh-foreach-va-map-trong-javascript-L4x5x1YBKBM
         - Tạo mảng mới có độ dài giống mảng ban đầu, nhưng các phần tử có giá trị được tính toán, biến đổi mới lại theo một cách nào đó.
                 let a = [1, 2, 3, 4];
                 let b = a.map(function(value) {  // Đã rút gọn callback
-                    return value * 2;
+                    return value * 2; --> chú ý map cũng như các method dưới, đều duyệt qua từng phần tử arr gốc, sau đó truyền vào function để xử lý, khi ta return value * 2 tức nó sẽ trả về x2 tại đúng vị trí đó trong mảng mới được tạo
                 });
                 // b = [2, 4, 6, 8]
+        - Nâng cao: https://youtu.be/-xZkVmkDwbU?t=552
 
-    ** Filter method:
+    ** Filter method: <giống bản nâng cấp của find(bên dưới) khi trả về tất cả phần tử thỏa mãn đk nào đó
         - Trả về mảng mới, gồm các phần tử nào trong mảng cũ khớp với điều kiện gì đó.
                 let primes = [2, 3, 5, 7, 11, 13];
                 let primes_smaller_than_10 = primes.filter(function(value) {
-                    return value < 10;
+                    return value < 10;  
                 });
                 // b = [2, 3, 5, 7]
 
@@ -475,10 +490,12 @@
                 let any_bigger_than_10 = primes.some(function(value) {
                     return value > 10;
                 });  // true
-    ** Find, findIndex: 
+    ** Find, findIndex: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/find
         - Dùng trả về vị trí một value trong mảng. find() trả về value, trong khi findIndex() trả về index 
         của value tìm thấy (phần tử đầu tiên). Nếu không có, find() trả về undefined và findIndex() trả về -1.
         
+        - find(function(value, index, array){}, thisArg) // thường chỉ truyền function là cùng, thisArg là 'this' dùng nếu cần sao ý, k hiểu lắm
+
         - Lưu ý "find" ở đây không chỉ đơn thuần là tìm một giá trị trong mảng, mà chính xác hơn nó tìm phần tử 
         đầu tiên khớp với một điều kiện nào đó.
                 let a = [3, 5, 2, 13, 4];
@@ -486,19 +503,99 @@
                     return value > 10;
                 });
                 // pos = 3
-    ** Reduce, reduceRight:
+
+    ** Reduce, reduceRight: xem F8 nếu muốn chi tiết https://youtu.be/-JMh3A556cw
         - Hiểu đơn giản là giảm mảng thành tổng: từ 1 array nhiều phần tử reduce xuống còn 1 gtri duy nhất
                 let a = [1, 2, 3, 4, 5];
-                let sum = a.reduce(function(prevValue, value, index, array) {       // ở đây chỉ là tên 4 biến, có thể thay đổi, hoặc thậm chí bỏ 2 tham số sau nếu k dùng vẫn pass
+                let sum = a.reduce(function(prevValue, value hay element của mảng, index, array) {       // ở đây chỉ là tên 4 biến, có thể thay đổi, hoặc thậm chí bỏ 2 tham số sau nếu k dùng vẫn pass (tên biến đổi nhưng giá trị nó vẫn là cố định)
                     return prevValue + value;
                 });
                 // sum = 15
-            -> callback(hiểu sau) có thêm tham số prevValue (đóng vai trò là sum), nó giống sum = sum cũ + value vẫn làm thôi
+            -> callback(hàm được truyền vào là đối số, và hàm reduce có thể sẽ gọi hàm đó nhiều lần nên gọi là callback) có thêm tham số prevValue (đóng vai trò là sum), nó giống sum = sum cũ + value vẫn làm thôi
+            -> prevValue ở đây còn gọi là accumulator (biến lưu trữ, tích lũy: tích tổng/tích vào để cộng/nhân tiếp)
+        
         - reduceRight(): tương tự, từ phải qua thôi
+        
+        - Thực chất hàm reduce có 2 tham số: a.reduce(function(accumulator, currentVal tức curElement của mảng, currentIdx)..., initValue), cái initValue khi cộng ta muốn khởi tạo là 0 và khi nhân muốn khởi tạo là 1 đúng k, nhưng nếu vậy thì có thể bỏ qua vì JS thông minh và tự động khởi tạo như vậy :D (vilbo nói thế), còn nếu muốn khởi tạo khác (chả hạn cộng/nhân từ số khác lên) thì ta thêm vào, cái arrow function dễ gây rối tham số vch nhưng gọn :D
+
+        --> Sự khác biệt giữa việc có và không truyền initialValue cho hàm reduce: https://youtu.be/gLIXXBIySZ8?t=139
+            + Khi ta truyền vào initVal, VD như số 0 or 1 nó sẽ hiểu prevVal/accumulator kia là dạng number, và thực hiện tính toán
+            + Khi ta k truyền vào initVal, nó sẽ k hiểu được prevVal là kiểu gì, do đó nó sẽ lấy phần tử đầu tiên của mảng làm prevVal, còn currentVal lại là phần tử thứ 2. Như vậy là nó sẽ chạy ngắn hơn cách truyền đầy đủ initVal 1 bước (xem kĩ F8 link trên để hiểu), trong nhiều TH như video sẽ buộc phải truyền 0 vào mới trả về đúng number là tổng cần tính
+            --> chỉ nên bỏ initVal khi mà kiểu của element trong arr trùng với kiểu của total mình muốn nhận (vì k truyền nó lấy obj đầu làm prevVal)
+            --> Vận dụng lý thuyết trên cho 1 số bài toán điển hình
+            1. Flat - "Làm phẳng mảng từ depth array"
+                var depthArr = [1, 2, [3, 4], 5, [6, 7], 8] -> muốn gộp thành 1 mảng 1 chiều thôi thường là dùng 2 for để push từng phần tử vào 1 mảng 1 chiều, hoặc cũng có thể 1 for + concat vào mảng 1 chiều, ở đây ta dùng reduce với ý tưởng 2
+                var flatArr = depthArr.reduce(function(flatOutput, depthElement) {
+                    return flatOutput.concat(depthElement); // nếu thay concat bằng spread Operator thì nó tạo đối tượng mới nên chắc thành return [...flatOutput, ...depthElement], có điều nếu depthElement chỉ là 1 number thì k thể dùng ...depthElement được (not iterable) nên sẽ lỗi
+                }, []) // truyền vào 1 mảng vì kiểu của phần tử trả về là 1 mảng 1 chiều
+            2. Lấy các khóa học cho vào 1 mảng:
+                var topics = [
+                    {
+                        topic: "FE",
+                        courses: [
+                            {
+                                id: 1, 
+                                title: "HTML, CSS"
+                            },
+                            {
+                                id: 2,
+                                title: "JS"
+                            }
+                        ]
+                    }
+                    {
+                        topic: "BE"
+                        courses: [
+                            {
+                                id: 1,
+                                title: "PHP"
+                            },
+                            {
+                                id: 2,
+                                title: "Node.js"
+                            }
+                        ]
+                    }
+                ]
+                --> let coursesList = topics.reduce(function(courses, topic) {
+                    return courses.concat(topic.courses);
+                }, [])
+            3. bài cực kì nên xem lại: 
+                https://fullstack.edu.vn/learning/javascript-co-ban?id=21b0d7b9-bd8e-41e8-8cf8-dd0250147266
+                <chú ý cách dùng spead cho bài này> https://fullstack.edu.vn/learning/javascript-co-ban?id=bbd77fd0-8fe0-4bee-862d-40a70e1d1fa7
+
+        --> Xây dựng lại hàm reduce để hiểu hơn: https://youtu.be/y8ZkHEpF9zM
+                Array.prototype.reduce2 = function(callback, result) {  // về sau initVal chính là kết quả luôn (tức nó là giá trị ban đầu của kết quả, nhưng về sau nó chính là kết quả luôn nên đặt là res)
+                    let i = 0;
+                    if (arguments.length < 2) {
+                        result = this[0];
+                        i = 1;
+                    }
+
+                    for (; i < this.length; i++) {
+                        result = callback(result, this[i], i, this)   // tương ứng prevVal, curVal, index, array với this ở đây là Array (đối tượng gọi reduce)
+                    }
+                    return result;
+                }
 
     ** Arrow Function (ES6)
     		let b = a.map((value, index, array) => {})
 		hay let b = a.map (value => {})
+            -> trong cặp {} phải có return, còn nếu chỉ có 1 lệnh có thể bỏ return ghi mỗi dòng kết quả
+
+
+*** Math: phổ biến 
+    - Math.PI, Math.round(), Math.ceil(), Math.floor(), Math.min(), Math.max(), ...
+    - Math.random() như java đã note ảnh, nó return [0, 1), 
+        muốn từ [begin, end] thì kiểu Math.floor(Math.random() * n) + begin nếu muốn từ [begin, end] với n = end - begin + 1
+        muốn từ [begin, end) thì chỉnh n đi tý thôi: n = end - begin
+        --> để dễ nhớ thì cứ biết rằng n là số các số CÓ THỂ ĐẠT ĐƯỢC trong phạm vi
+        --> Math.floor() chính là ép kiểu (int) trong java đó, JS cũng có Number.parseInt() mỗi tội hơi dài :D
+*** Ngoại lệ document.all: 
+        - document.all chuyển sang boolean (!!document.all) sẽ là false
+        - document.all khi là toán hạng của so sánh == và != sẽ là undefined
+        - khi typeof document.all sẽ return undefined  
+
 
 *** Date Object: làm việc với thời gian  
         - let current = new Date(): lấy thời điểm hiện tại, giá trị tĩnh chứ k tự thay đổi
@@ -608,7 +705,7 @@
 
 *** Các vấn đề tự mày mò ra trong JS:
     ** Swap: 
-        - Có thể dùng kiểu a += b - (b = a) như java cho js nhé :d
+        - Có thể dùng kiểu a += b - (b = a) như java cho js nhé :D
                     let x = 1;
                     let y = 2;
                     console.log(`x = ${x} & y = ${y}`);
@@ -640,11 +737,18 @@
                 }
         - Dấu chấm tương tự
             -> tuy nhiên chú ý phải cho dấu thập phân với dấu phân cách 3 chữ số phải khác nhau nhé
-    ** Seperate Operator: https://viblo.asia/p/su-dung-spread-operator-trong-javascript-gDVK24welLj
+
+    ** Spread Operator: https://viblo.asia/p/su-dung-spread-operator-trong-javascript-gDVK24welLj
         - Max, min arr: Math.max(...arr)
         - Sao chép mảng, tách string thành characters, kết hợp thuộc tính của obj
-                [...["😋😛😜🤪😝"]] // Array [ "😋😛😜🤪😝" ]
+                [...["😋😛😜🤪😝"]] // Array [ "😋😛😜🤪😝" ]   // --> Chú ý phần này, phải hiểu cơ chế: ...[array] nó sẽ trả về các phần tử của mảng, 
+                                                                  // khi console.log ...[1, 2, 3, 4, 5] nó ra 1 2 3 4 5 nhưng type of ...[array] nó lại lỗi syntax, nên về cơ bản [...[array]] là tách các phần tử mảng rồi lại ép nó thành 1 mảng 
+                                                                  // --> ta có thể dùng arr3 = [...arr1, ...arr2] nhé, 
+                                                                  // còn gộp arr2 vào arr1 thì arr1.push(...arr2) (đã test)
+                                                                  // ==> Chốt lại ...[array] chả khác gì tách mảng (tương tự với string) thành các phần tử con, có thể dùng để in ra, ép thành mảng, hoặc push vào mảng như push các element bình thường
+
                 [..."🙂🙃😉😊😇🥰😍🤩!"] // Array(9) [ "🙂", "🙃", "😉", "😊", "😇", "🥰", "😍", "🤩", "!" ]
+                                                                  // Tương tự ...string nó cũng clg ra các character cách nhau 1 dấu cách nhưng typeof lại lỗi, giống mảng bên trên  
 
                 const hello = {hello: "😋😛😜🤪😝"}
                 const world = {world: "🙂🙃😉😊😇🥰😍🤩!"}
@@ -656,7 +760,10 @@
                 const fewMoreFruit = ['🍉', '🍍', ...fewFruit] //thêm các phần tử của mảng fewFruit vào mảng fewMoreFruit
                 console.log(fewMoreFruit) //  Array(5) [ "🍉", "🍍", "🍏", "🍊", "🍌" ]
 
-        - Mảng sao chép bằng seperate operator giống như tạo vùng nhớ khác trong ngôn ngữ khác nên k ảnh hưởng đến mảng gốc như gán bằng
+        - Convert mảng sang obj dạng index là key:
+            { ...['a', 'b', 'c'] }   // { '0': 'a', '1': 'b', '2': 'c' }
+
+        - Mảng sao chép bằng spread operator giống như tạo vùng nhớ khác trong ngôn ngữ khác nên k ảnh hưởng đến mảng gốc như gán bằng
                 const array = ['😉','😊','😇']
                 const copyWithEquals = array // Thay đổi mảng array đồng nghĩa cũng sẽ thay đổi mảng copyWithEquals
                 const copyWithSpread = [...array] // Thay đổi mảng array sẽ không ảnh hưởng đến mảng copyWithSpread
@@ -666,3 +773,1430 @@
                 console.log(...array) // 😡 😊 😇
                 console.log(...copyWithEquals) // 😡 😊 😇
                 console.log(...copyWithSpread) // 😉 😊 😇
+
+        - Loại bỏ phần tử trùng lặp trong mảng: arr = [1, 2, 3, 2, 3, 1]
+            --> newArr = [...(new Set(arr))] // ở đây new Set(arr) sẽ trả về {1, 2, 3} lúc này dùng spread để tách các phần tử obj ra và cặp [] để ép thành mảng
+    ** Gộp, nối mảng:
+        - concat: arr1 = arr1.concat(arr2) hoặc arr3 = [].concat(arr1, arr2), arr3 = arr1.concat(arr2)
+        - spread: arr1.push(...arr2) hoặc arr3 = [...arr1, ...arr2]
+
+    ** Convert Array to Object: https://stackoverflow.com/questions/4215737/convert-array-to-object
+        - Object.assign({}, ['a','b','c']); // {0:"a", 1:"b", 2:"c"}
+        - { ...['a', 'b', 'c'] }            // { '0': 'a', '1': 'b', '2': 'c' }
+        - ['a', 'b', 'c'].reduce((a, v) => ({ ...a, [v]: v}), {})   // { a: "a", b: "b", c: "c" }
+            --> chú ý dòng trên dùng arrow function thì phải bọc () cho cụm { ...a, [v]: v} nếu không sẽ lỗi vì {} phải return
+            --> Cách trên có thể tường minh thành:
+                arr.reduce((obj, value) => {
+                    obj[value] = value; 
+                    return obj;
+                }, {})
+            --> ứng dụng cho dạng bài này trên f8: https://fullstack.edu.vn/learning/javascript-co-ban?id=bbd77fd0-8fe0-4bee-862d-40a70e1d1fa7
+
+
+*** DOM: https://viblo.asia/p/javascript-dom-4P856LDBZY3#_1-finding-elements-4
+         https://fullstack.edu.vn/learning/javascript-co-ban?id=107c0734-b92e-43a6-bf7b-f62ece5972eb
+         https://www.w3schools.com/js/js_htmldom.asp
+
+    ** Document Object Modal: là thực thể được trình duyệt tạo ra khi load 1 trang web. Có 3 loại: Core DOM, XML DOM, HTML DOM
+        --> xem ảnh w3schools để nhớ, dễ hình dung
+        - JS: chạy trên Browser | Server (NodeJS)
+        - Trình duyệt render trang web dựa trên cấu trúc của DOM và nó cung cấp API (Application programing interface) cho JS
+        truy cập vào, do đó JS có thể truy cập và tương tác: đọc, thay đổi dữ element, thay đổi css style, thêm/xóa element và 
+        attribute của nó, xử lý event.
+
+    ** HTML DOM: Có 3 thành phần element, attribute, text
+        1. Element (các tag)
+            * Get elements: Id, class, tag, css selector, html collection
+                - getElementById()              // k có s, k tìm thấy return null
+                - getElementsByClassName()      // có s, trả về HTMLcollection, k có thì như mảng rỗng
+                - getElementsByTagName()        // có s, trả về HTMLcollection, k có thì như mảng rỗng
+                - querySelector()               // trả về 1 phần tử đầu tiên (nếu có nhiều), dạng object (node object kiểu là 1 phần tử của NodeList), k tìm thấy return null, throw SYNTAX_ERR nếu chuỗi sai
+                - querySelectorAll()            // trả về 1 NodeList, throw SYNTAX_ERR nếu chuỗi sai
+                - document.forms // trả về 1 HTMLCollection, ta cũng có thể lấy phần tử thứ bao nhiêu kiểu document.forms[0 or 1, 2, ...]
+                hoặc có thể dùng document.forms['key'] hoặc forms.key với key trùng với id của form. Ngoài forms còn có links, images, ...
+                Áp dụng ta có document.anchors trả về tất cả thẻ a có thuộc tính name (tức attribute name="...")
+            --> HTMLcollection & NodeList có dạng giống mảng, cũng có length, iterable tuy nhiên k có map, reduce, filter, ... các thứ thôi
+                CHÚ Ý: những method trả về HTMLCollection hoặc NodeList dù chỉ có 1 phần tử nó cũng vẫn là dạng gần như mảng, chứ k phải phần tử
+                       mình muốn lấy, phải thực hiện tiếp truy nhập mảng để lấy phần tử đó nhé (lấy như mảng kiểu [index])
+            --> Dùng cách nào cũng được, tuy nhiên tag dễ rối vì nhiều tag trùng các thứ, html collection ít dùng (gần như quên mất sự tồn tại :D), 
+                nên chủ yếu dùng Id, className or css selector thôi
+            --> Không nhất thiết phải từ document, vd:
+                    <div class="box-1">
+                        ul>li*2
+                        <p>
+                    </div>
+
+                nếu ta có let boxOne = document.querySelector('.box-1') // hoặc class, id, tag gì tùy, miễn là lấy được thẻ div class box-1
+                từ đây ta muốn lấy con của boxOne, ta có thể dùng 
+                    let liChild = boxOne.querySelectorAll('li') // hoặc bằng tag, ...
+                    let pChild = boxOne.getElementsByTagName('p')
+
+        2. Attribute (các thuộc tính của element, thường trong cặp ngoặc mở của tag)                                             
+            * Thay đổi: thêm, xóa, sửa attribute của element. Trước tiên phải select đc element đã, vd có let a = document.getElementById('a_link')
+                - Truy xuất trực tiếp bằng cách gọi đến property
+                    -> Nếu muốn gọi chỉ cần variable.attributeName là được (k gọi được thuộc tính k hợp lệ), sửa thì gán giá trị vào (k gán được thuộc tính k hợp lệ)
+                    a.href = 'http://google.com/'       // chỉ thẻ a nhé vì nó k hợp lệ với thẻ khác, hoặc muốn thực hiện với thuộc tính k có sẵn (ngoài class, id, ... vd như thuộc tính tự custome 'data'), muốn xét thì dùng setAttribute()
+                    a.title = '...'     // là cái đoạn text sẽ hiện khi ta hover vào element ấy
+                    a.className = '...' // className vì để tránh nhầm với class trong JS
+                    ...
+                - Dùng hàm getAttribute(), setAttribute():
+                    a.getAttribute('href');  // trả về thuộc tính href
+                    a.getAttribute('data-attribute') // thuộc tính tự thêm, k có sẵn
+
+                    a.setAttribute('href', '#');  // thay đổi thuộc tính href
+                    a.setAttribute('class', 'new-class')
+                    a.setAttribute('id', 'new-id')
+
+                    --> Đặc biệt setAttribute có thể set thuộc tính k hợp lệ cho thẻ được, vd như href cho thẻ h1, ...
+                    let h1Tag = document...(...)
+                    h1Tag.setAttribute('href', 'heading')
+                    h1Tag.setAttribute('data', 'được nè') // thuộc tính custome
+
+        3. Text (nội dung của element)
+
+
+    ** Các phương thức phổ biến:
+        * innerText và textContent:
+            - Đều là trả về text của element, và set nội dung khi ta gán cho nó nhưng sẽ chỉ là nội dung chữ, vì nếu ta
+                gán cho nó nội dung kiểu = '<i> Thẻ i mới </i>' nó vẫn coi như là string chứ k phải tag i
+
+            - Phân biệt: https://youtu.be/xwcQl75iSNc?t=432
+                + innerText (thuộc tính của ElementNode) sẽ trả về đúng những gì ta thấy trên trình duyệt, vậy nên 
+                nếu 1 text có trong file html nhưng bị display none thì nó sẽ k hiện trên trình duyệt cũng như khi gọi innerText
+                
+                + textContent (thuộc tính của cả elementNode và textNode)sẽ trả về text mà ta nhìn thấy trên 
+                file html của ta (bỏ qua các tagName, attribute, nó chỉ show text nhưng giữ cả xuống dòng, ...etc), 
+                sẽ show là những thứ bị ẩn (display none) vì trong file html vẫn có. Kể cả nội dung trong phần <style></style> hay <script></script> nếu để trong tagName
+
+                + khi gán thuộc tính trong cặp `` và có xuống dòng (Enter) thì innerText sẽ thêm <br> vào khi nhìn ở devTools còn textContent thì không
+                
+        * innerHTML & outerHTML: https://youtu.be/SXW4QSjk4Js
+            - Như đã nói ở trước innerText và textContent đều không thể thêm element vào trong 1 element được -> innerHTML
+            - innerHTML: thêm 1 element (có thể kèm attribute, text) vào bên trong 1 element (có thể truyền mảng được như vd bên dưới)
+                let boxElement = document.querySelector('div.box') // thẻ div có class .box
+                boxElement.innerHTML = '<h1>Heading</h1>' --> lúc này sẽ tạo 1 thẻ h1 trong div.box và nội dung như trên
+                boxElement.innerHTML = 'Heading'          --> lúc này nó lại thành như innerText, thêm nội dung vào div.box
+                boxElement.innerHTML = '<h1 title="h1-title">Heading</h1>'  --> thêm đc cả attribute
+                --> Ta cũng có thể lấy nội dung (dạng string) khi chỉ gọi nó, vd console.log(boxElement.innerHTML)
+
+            - outerHTML: nó trả về chính elementNode gọi nó, tức boxElement.outerHTML sẽ trả về cả cụm div.box và khối bên trong nó
+                boxElement.outerHTML = '<span>Test</span>'
+                --> Lúc này trên devTools sẽ thay toàn bộ div.box thành <span>Test</span>, biến boxElement vẫn là select div.box tuy nhiên là do nó lưu vào bộ nhớ rồi (kể cả boxElement.innerHTML vẫn ra 'h1...'), nhưng k tồn tại trên DOM nữa
+
+            ==> Vận dụng bài này rất hay: https://fullstack.edu.vn/learning/javascript-co-ban?id=07268b2c-59f8-4e6c-8483-f7c166159e41
+                        let html = courses.map(val => `<li>${val}</li>`)    // trả về mảng mới có các thẻ li
+                        ul.innerHTML = html;    // đúng ra innerHTML chỉ gán bằng 1 string thôi, nên khi ta tạo html bằng mảng thì nên join('') <tức các phần tử liên tiếp nhau, join k truyền mới giống toString()>
+            - Quan trọng: có thể gán innerHTML bằng:
+                + String:       '<li>...1</li>
+                                 <li>...2</li>
+                                 <li>...3</li>'
+                + Array: ['<li>...1</li>', '<li>...2</li>', '<li>...1</li>']. Tuy nhiên để mảng không sẽ có lỗi vì nó chỉ nhận gán bằng string -> dùng thêm phép join('') nhé !!, cách dùng mảng được cái kết hợp map nên đỡ forEach
+                
+        * Học các method khác bằng cách querySelector ra 1 biến (typeof là object nhé) vd boxElement như trên
+            -> console.log([boxElement]) ra devtools nhìn thấy các phương thức bên dưới luôn, coi như từ điển
+
+        * 1 số method khác: https://fullstack.edu.vn/learning/javascript-co-ban?id=a00b58cd-0ae7-4077-9250-8608293a7621
+            - autocapitalize: nếu true sẽ cho phép mình tự động viết hoa chữ đầu -> dùng trong các website cho phép tương tác input như mycv.vn của a Sơn Đặng
+                -> thẻ phải có attribute là contenteditable="" biến nó và thẻ con có thể chỉnh sửa như input, sửa trực tiếp trên trang, còn Ctrl B/I/U như thường
+                -> link xem kĩ: https://youtu.be/YWTO5hO7d8A?t=747
+            
+            - childNodes: danh sách (NodeList) các node con (tất cả node element, attr, text), chú ý dấu xuống dòng cũng vẫn là textNode nhé
+                    VD: <div>
+                            <h1>...</h1>
+                        </div>
+                    -> sẽ có 3 phần tử là textNode (đoạn xuống dòng) đến elementNode (h1) và lại textNode 
+
+            - children: danh sách (HTMLCollection) các elementNode con
+            - classList:
+            - firstChild: trả về node con đầu tiên (bất kể node gì cả textNode enter)
+            - firstElementChild: trả về node element đầu tiên
+            - lastChild
+            - lastElementChild
+            - localName: là thẻ hiện tại như div, p, h1, ...
+            - namespaceURI: tên đường dẫn kiểu tên miền ý, còn baseURI là dạng địa chỉ ip thì phải
+            - nextElementSibling: trả về thẻ tiếp theo (anh em ruột), vd thẻ script
+            - nextSibling: trả về node tiếp theo
+            - nodeName: tên thẻ dạng viết hoa, kiểu: DIV, H1, P, SPAN, ...
+            - nodeType: trả về 1(elementNode), 2(attrNode) hoặc 3(textNode) 
+                -> ứng dụng để kiểm tra loại node gì
+                
+            - offsetHeight: chiều cao, offsetWidth: chiều rộng
+                --> phân biệt với clientHeight/Width: https://stackoverflow.com/questions/4106538/difference-between-offsetheight-and-clientheight#:~:text=clientHeight%20%3D%20the%20height%20of%20an,scrollbar%20(if%20it's%20available)
+                + clientHeight = the height of an  element + the vertical padding.
+                + offsetHeight = the height of the element + the vertical padding + the top and bottom borders + the horizontal scrollbar (if it's available).
+                => offset thì hơn client là tính cả độ dày margin và scrollbar nếu có
+
+            - offsetLeft: tọa độ chiều x, offsetTop: tọa độ chiều y (chiều dương hướng xuống)
+                --> phân biệt với clientLeft/Top: https://stackoverflow.com/questions/27199247/what-is-the-difference-between-offsetleft-and-clientleft-in-javascript#:~:text=offsetLeft%20%3D%20position%20left%20%2B%20margin%20from,scrollbar%20width%20(if%20present)
+                + clientLeft = left border + left scrollbar width (if present)  // độ dày của border và scrollbar??
+                + offsetLeft = position left + margin       // tọa độ từ cạnh trái đến margin của phần tử (đến lề thì dừng ấy, k phải bao gồm lề)
+
+        ==> Khi làm thường dùng offset hơn và chú ý khi gán style bằng js phải thêm đơn vị kiểu:  line.style.width = tabItemActive.offsetWidth + 'px';
+
+            - offsetParent: trả về thẻ cha, vd body
+            - parentElement:
+            - parentNode:
+            - remove: kiểu có đối tượng được querySelector, ta .remove() là xóa đối tượng đó
+
+        * classList: 
+            - Trả về dạng DOMTokenList
+            - Các phương thức: add, remove, contains, toggle, replace(oldClass, newClass), length (chú ý tên class trùng nhau nó k tính)
+                -> lưu ý truyền class vào bỏ dấu chấm, vd boxElement.classList.add('new-class')
+    
+    ** DOM CSS:
+        * Các style được DOM cho vào một thuộc tính object, có tên là style:
+                let e = document.querySelector(".box");
+                e.style.border = "1px solid red";
+                e.style.fontSize = "200%";
+            --> Thuộc tính trong CSS dùng dấu gạch nối, nhưng trong JS được đổi lại thành camelCase. Và các thuộc tính shorthand được viết dạng chuỗi tương tự trong CSS như trên.
+        * Set nhiều thuộc tính lại phải tốn nhiều lần gọi??, giải pháp dùng Object.assign()
+            Object.assign(boxElement.style, {
+                border: "1px solid red",    // singlequote cũng được vì đây là JS
+                fontSize: '200%',
+                backgroundColor: 'green',
+            })
+        * Vấn đề là ở đây ta chỉ tạo/thay đổi css inline, k phải internal hay external, và để gọi style.thuộc tính cũng chỉ là gọi css inline, JS chỉ hỗ trợ thay đổi nhỏ,
+        chứ k phải dùng cho css hoàn toàn đối tượng, nên css chính phải ở file css.
+    ** DOM Event:
+        - Các loại event: https://www.w3schools.com/jsref/dom_obj_event.asp
+          -> common events:
+            + change: khi xảy ra thay đổi, kiểu thẻ select mình chọn option khác thì cập nhật lại giá tiền ấy, thẻ input khi thay đổi nội dung (khi nhập rồi blur ra ngoài sẽ nhận), textarea, ...
+            + input: khác với onchange cho thẻ input, oninput nó sẽ nhận khi ta thay đổi nội dung ô text mà k cần blur ra ngoài
+            + click: quá phổ biến rồi :D, tuy nhiên ngoài onclick(lắng nghe đợi click) ta có thể dùng .click() để code nó ấn luôn
+            + dblclick: double click
+            + mouseover: khi rê chuột vào 1 phần tử hoặc con phần tử đó
+            + mouseout: ngược với mouseover
+            + keydown: người dùng đang ấn phím xuống(ấn nút khác với nhấc nút nhé)
+            + keyup: người dùng đang nhấc phim lên
+            + keypress: người dùng ấn phím --> có vẻ ít dùng, ktra ấn phím thôi hay sao ấy?? thứ tự là up -> press -> down
+                -> trong đó press hình như k nhận event.which 1 số phím như esc, down và press đều nhấn giữ để nhận liên tục được còn up thì k (up thì liên tục sao :D)
+            + mouseup, mousedown: giống key nhưng là chuột thôi
+            + load: khi hoàn tất load page, cái này hay áp dụng quảng cáo vừa load xong hiện quảng cáo lên nè :D
+            + focus: làm css chắc cũng thấy, khi ấn vào 1 thẻ input để bắt đầu nhập đấy cũng tính là focus
+            + blur: ngược với focus, ví dụ đang nhập text vào input xong click ra ngoài thẻ (thoát ra) đấy là blur
+            + resize: thay đổi kích thước document view hoặc element
+            + scroll: lăn chuột, lên xuống scrollbar
+                    document.onscroll = function () {
+                        // console.log(window.scrollY);
+                        const scrollTop = window.scrollY || document.documentElement.scrollTop;
+                    };
+            + beforeunload: dùng trong việc đưa ra cảnh báo trước khi reload hoặc chuyển sang đường dẫn mới có thể mất dữ liệu chưa submit...
+                -> https://stackoverflow.com/questions/3221161/how-to-pop-up-an-alert-box-when-the-browsers-refresh-button-is-clicked
+                    window.onbeforeunload = function () {
+                        if (someConditionThatIndicatesIShouldConfirm) {     // nếu mà có dữ liệu mới chưa submit, save thì cảnh báo, k thì thôi
+                            return "If you reload this page, your previous action will be repeated";
+                        } else {
+                            //Don't return anything
+                        }
+                    }
+        * Cách dùng event:
+            1. Attribute events: 
+                - Viết kiểu inline vào thẻ, thêm tiền tố 'on' vào trước tên event, viết mã scrip vào nháy kép (HTML chứ k phải JS nên nháy kép?? thật ra thử nháy đơn vẫn được, nma thẻ html mình vẫn set attr bằng nháy kép nên cứ kép đi)
+                    <h1 onclick="console.log(Math.random())"> ... </h1>
+                - có thể truyền this vào đoạn mã js (nháy kép), nó chính là thẻ mà gọi sự kiện, vấn đề là khi ta click vào thẻ con của thẻ đó nó có nhận k??
+                        <h1 onclick="console.log(this)">
+                            <span>Hello JS basic</span>
+                        </h1>
+                    -> có, do sự kiện nổi bọt(event propagation): nó sẽ bắt từ thẻ con trước (vì h1 rỗng text, ta ấn vào chữ của thẻ con, hay nói cách khác ta trực tiếp ấn vào thẻ con), sau đó nó nổi bọt đến thẻ cha, tổ tiên, ...
+                        https://youtu.be/AA3WWZAMv_0?t=742
+                        https://viblo.asia/p/javascript-dom-4P856LDBZY3#_2-access-elements-5 (Phần D2, Event Listener có tham số thứ 3 nữa)
+            
+            2. Assign event using the element node:
+                let h1Element = document.querySelector('h1')
+                
+                h1Element.onclick = function () {
+                    console.log(h1Element)  // cách này vẫn được nhưng sẽ có TH gây lỗi, muốn lấy this như cách 1 làm ntn?
+                }
+
+                h1Element.onclick = function(e) {  // ở đây event là mouseEvent vì là click, this ở attr event hay h1Element ở cách trên sẽ tương đương e.target
+                    console.log(e) // xử lý TH trên, xem console sẽ thấy có nhiều phương thức, chú ý e.target là trả về đối tượng mình click như querySelector luôn -> áp dụng ấn vào element nào hiện thông tin đối tượng bị click đó
+                }
+
+                --> G.thích cách dùng h1Element gây lỗi ở trên: https://youtu.be/AA3WWZAMv_0?t=1377
+                    Nếu dùng for loop biến i nó đang ở 1, nhưng ta lại click vào arr[3] (rõ ràng nó chỉ định nghĩa đc arr[1] thôi, i đã ++ đến 3 đâu) thì nó sẽ undefined
+                --> Vận dụng e.target để làm bài: https://fullstack.edu.vn/learning/javascript-co-ban?id=ab641ab7-570c-4a3a-a83f-104987160bf4
+
+            ==> Ta có thể dùng variable.addEventListener('eventName', function..., useCapture);  // đây là Event Listener, sẽ nói cụ thể hơn bên dưới, đây là phần nói về DOM event thôi
+                Tham số thứ 3 nếu true là capturing: đi từ tổ tiên rồi đến element đó, còn mặc định là false gọi là bubbling: tức event propagation đó
+
+            
+            3. Một số ví dụ thường dùng trong thực tế:
+                - input text: 
+                    let inputText = document.querySelector('input[type="text"])
+                    inputText.onchage = function (e) {
+                        console.log(e.target.value)    // .value để lấy nội dung, onchange sẽ chạy khi nội dung thay đổi và ta blur ra ngoài
+                    }
+
+                    inputText.oninput = funtion (e) {
+                        let inputVal = e.target.value  // Nhập đến đâu (thay đổi đến đâu) là lấy value ra đến đó
+                    }
+
+                - input checkbox (hoặc radio):
+                    let inputCheck = document.querySelector('input[type="checkbox"])
+                    inputCheck.onchage = function (e) {
+                        let isCheck = e.target.checked // .checked để ktra xem đã tích chưa, return T/F
+                    }
+
+                - select:
+                    let select = document.querySelector('select')
+                    select.onchage = function (e) {
+                        console.log(e.target.value)    // lấy ra value của option hiện tại, lưu ý thẻ select gồm nhiều thẻ <option value="value1">1</option> thì .value nó trả về 'value1' chứ k phải cái ta nhìn thấy là '1'
+                    }
+                
+                - input text tiếp nhưng áp dụng keyup, keydown:  <keyup/down thuộc loại KeyboardEvent, console.log(e) ra là thấy>
+                    let inputText = document.querySelector('input[type="text"])
+                    inputText.onkeydown = function (e) {    
+                        console.log(e.target.value)    // .value nếu muốn lấy val, lưu ý với keydown rằng nó sẽ trả về value trước khi ta ấn, hay nếu input rỗng thì ta ấn phím a nó sẽ trả về '' (khi ta nhấn, chứ k phải nhấc nhé), nếu ấn tiếp b (tức input có ab) nó trả về 'a' (vì trước khi bấm b chỉ có a)
+                                                       // https://youtu.be/Ze4b9x7zgas?t=610 xem kĩ để lưu ý val của keydown (console chậm 1 character với input)
+                    }
+
+                    inputText.onkeyup = function (e) { 
+                        console.log(e.target.value)    // khác với keydown, khi ta ấn xuống thì input có chữ 'a' rồi, nên khi nhấc phím a lên thì console cũng show ra chữ a luôn (vì trước khi up đã có a rồi)
+                                                       // https://youtu.be/Ze4b9x7zgas?t=618 keyup: console k chậm character với input như keydown
+
+                        console.log(e) xem console sẽ hiện 1 list các thông tin, sẽ có which tương đương mã code của phím
+                        console.log.(e.which) để lấy mã phím vừa ấn -> tuy nhiên cái này đang chỉ set input, ta nên set cho những cái lớn hơn
+                    }
+
+                    -> document.onkeydown = function (e) {  // up/down/press đều được, tuy nhiên press k nhận esc (chắc cả 1 số phím khác nữa)
+                        switch(e.which) {
+                            console.log(e.which)  // nếu muốn xem phím có which là gì để cài đặt
+                            case 27:
+                                console.log('EXIT')
+                                break;
+                        }
+                    }
+        
+        * Nâng cao với preventDefault và stopPropagation
+            1. preventDefault: ngăn những thao tác mặc định như ấn vào thẻ a là dẫn đến link (bấm vào những k dẫn tới trang đã kèm href nữa, hoặc phải t/m đk gì đó mới chạy)
+                - VD1: chỉ ấn vào link tới trang bất kì của F8 (tức có bắt đầu bằng https://f8.edu.vn, tồn tại/chứa cũng được)
+                    + có 2 thẻ <a href="https://f8.edu.vn"> Học lập trình </a>
+                            <a href="https://google.com.vn"> Tìm kiếm </a>
+                    + Muốn thẻ có f8.edu.vn mới chuyển trang:
+                        let links = document.querySelectorAll(...), hoặc document.anchors <chỉ các thẻ a có tên> hoặc document.links, cách nào cũng được
+                        links.forEach(link => {
+                            link.onclick = e => {
+                                if (!e.target.href.startsWith('https://f8.edu.vn')) {   // startsWith chú ý có s sau start, ở đây muốn các trang con bắt đầu bằng f8.edu.vn mới chuyển, còn lại thôi, có thể dùng includes hoặc indexOf để ktra tồn tại cũng được
+                                    e.preventDefault();
+                                }
+                            };
+                        });
+                - VD2: https://youtu.be/4ZnQur6rewg?t=554
+                    + Cho 1 thẻ input và 1 thẻ ul bên dưới(mặc định display: none), chỉ khi focus vào input mới hiện ul, giờ ta muốn sau khi điền nội dung rồi ấn vào ul k mất (vì ban đầu khi blur khỏi input sẽ mất)
+                    + Ta phải hiểu rằng, khi ta click vào ul (sau khi nhập input mới hiện ul) thì lúc này xảy ra 2 việc: 1 là blur khỏi input và 2 kéo theo là ngày lập tức ul ẩn đi
+                    --> ul.onmousedown = function (e) {
+                        e.preventDefault(); // chặn việc ẩn ul đi (ẩn ul nên phải tác động event vào ul chứ k phải input)
+                    }
+            2. stopPropagation: ngăn việc bubbling do tham số thứ 3 của Event listener nói ở phần trên đó
+                - Khi ta ấn vào 1 thẻ con của element, thì nó sẽ thực hiện hành vi của thẻ con (nếu có), đồng thời nổi bọt lên thẻ cha nếu thẻ cha có hành vi gì (vì thẻ con vẫn trong phạm vi của thẻ cha) nó cũng gọi luôn
+                - Dùng stopPropagation cho element mà ta muốn nó sau khi thực hiện hành vi thì dừng, k nổi bọt lên cha/tổ tiên nữa (tức nó có thực hiện, còn tổ tiên nó thì k)
+                    -> nếu muốn ấn vào bên ngoài modalContainer để X giống như ấn vào nút X trên container thì ta set cho cả modal click sẽ close, lúc này bị lỗi ấn vào container ngoài dấu x cũng close. Dùng container.stopPropagation() sẽ làm cho việc click vào 1 vùng của container sẽ thực hiện hành vi của nó nếu có, rồi container thực hiện nếu có và dừng, nếu nổi nữa thì là hành vi của modal tức close đó!!
+    ** Event Listener
+        * Tại sao dùng Event Listener thay cho DOM Event:
+            - Thực hiện nhiều việc: như DOM Event vẫn có thể thực hiện đc nhiều việc trong 1 cái onclick, onmousedown, ... nhưng có thể công việc lớn nhiều code sẽ nhét hết vào 1 function dễ gây rối, còn EventListener có thể tách thành các function khác nhau -> vẫn dùng đc nên tùy TH cân nhắc
+            - Lắng nghe/Hủy bỏ lắng nghe: VD như việc click vào 1 phần tử sẽ hiện ra thông báo chẳng hạn, hoặc thực hiện nhiều việc action1, action2 và action3, muốn sau 3s ấn vào nó k còn tác dụng show notice nữa (hoặc muốn ẩn mỗi action2 thôi) thì chỉ có cách dùng setTimeout và gán đè nó bằng 1 function rỗng k làm gì cả (còn 3 action viết vào 1 onclick thì chịu k bỏ mỗi action2 đc ngoài cách tách thành 3 onclick) :D -> addEventListener sẽ rõ nghĩa hơn
+        
+        * Cú pháp:
+            btn.addEventListener('click', viec1);
+            btn.addEventListener('click', viec2);
+
+            // Hủy sau 3s ntn?? k cần gán lại bằng 1 function rỗng
+            setTimeout(function() {
+                btn.removeEventListener('click', viec1)
+            }, 3000)
+
+*** JSON, Fetch, Postman:
+    ** JSON:
+        - JavaScript Object Notation là một kiểu định dạng dữ liệu (chuỗi) tuân theo một quy luật nhất định mà hầu hết các ngôn ngữ lập trình hiện nay đều có thể đọc được. JSON là một tiêu chuẩn mở để trao đổi dữ liệu trên web.
+        - Chuyển đổi qua lại giữa JSON với các kiểu dữ liệu khác: Number, Boolean, String, Null, Array, Object
+            -> Mã hóa (Encode / Stringify) - từ js sang json, giải mã (Decode / Parse) - từ json sang js
+                var json = '1'      // number
+                var json = 'true'   // boolean
+                var json = '"abc"'   // string
+                var json = '["Javascript","PHP"]'  // k có dấu phẩy ở phần tử cuối, các key/value trong nháy kép (k được nháy đơn)
+                var json = '{"name":"abc","age":18}'
+            
+            + JSON.parse: từ json sang js
+                console.log(JSON.parse('1'))        // typeof ra number
+                console.log(JSON.parse('true'))     // typeof ra boolean 
+                console.log(JSON.parse('null'))     // typeof ra object
+                console.log(JSON.parse('"true"'))   // typeof ra string
+            + JSON.stringify(): từ js sang json (string)
+                console.log(JSON.stringify(null))   // type ra string
+                console.log(JSON.stringify([
+                    'JavaScript',
+                    'PHP'
+                ]))
+
+    ** Promise: Đọc kỹ https://viblo.asia/p/bat-dong-bo-trong-javascript-maGK7J8D5j2 sẽ bao hàm toàn bộ nội dung ở đây
+        * Sync / Async: (Synchronous / Asynchronous)
+            - Đồng bộ (sync) là chạy tuần tự từ trên xuống). Cho vd:
+                    console.log(1)
+                    console.log(2)  -> màn hình sẽ show ra 1 rồi đến 2 -> đồng buộc
+            - Bất đồng bộ (async): k tuân theo cách trên:
+                    setTimeout(() => {
+                        console.log(1)
+                    }, 1000)
+                    console.log(2)
+                --> Cái nào in ra trước :D, nếu theo đồng bộ thì chạy code đến hàm setTimeout nó bị ngủ, đợi nó ngủ xong nó chạy hàm bên trong, sau đó mới xuống dưới
+                --> Tức theo sync nó phải in ra 1 (ngủ cũng phải đợi) rồi in 2, nhưng thực tế JS lại async ở đoạn này và in ra 2 trước sau đó đến 1 (tức ngủ = bỏ qua)
+            ==> JS là ngôn ngữ đơn luồng, nó chỉ bất đồng bộ trong 1 số trường hợp thôi: setTimeout, setInterval, fetch, XMLHttpRequest, file reading, request animation frame, ...
+
+        * Promise: (trong link trên từ C-1c đổ xuống, giải quyết callback hell)
+            - Là gì: Promise (ES6) sinh ra để xử lý thao tác bất đồng bộ, trước kia ta sd callback(cả 2 chỉ là những kĩ thuật hỗ trợ trong việc xử lý các tác vụ bất đồng bộ (của WebAPIs), bản thân chúng không dùng để tạo ra các hàm bất đồng bộ) nhưng xảy ra vấn đề callback hell (khó nhìn, khó hiểu, rối). 
+            Promise là đối tượng đại diện cho kết quả của hành động nào đó sẽ hoàn thành trong tương lai, kết quả trả về sẽ là resolve nếu thành công và reject nếu thất bại.
+            Chúng ta sẽ thực hiện một hành động bất đồng bộ (trong hàm gọi là executor), và gắn thêm callback vào từng kết quả, từng trường hợp thành công hay thất bại. Ví dụ khi thành công, thì những callback gắn với trường hợp resolve sẽ được gọi, tương tự khi thất bại thì callback của reject được gọi.
+                    B1. Gọi hàm execution, chứa lệnh bất đồng bộ
+                    B2. Thêm callback cho trường hợp resolve, reject
+                    B3. Khi executor thực hiện xong sẽ trả về kết quả
+                    B4. Callback tương ứng khi resolve, reject sẽ được gọi
+                    
+            - Cú pháp:
+                    var promise = new Promise(
+                        // Executor
+                        function(resolve, reject) {     // chỉ là tên biến, có thể đặt khác, nhưng giá trị của nó k đổi, có thể đặt gọn hơn nhưng ý nghĩa phải đúng
+                            // logic
+                            // thành công: resolve()
+                            // thất bại: reject()
+                        }
+                    )
+            - Các trạng thái:   Pending: promise đang thực hiện chưa xong
+                                Full filled: trạng thái đã thực hiện xong, kết quả thành công
+                                Rejected: trạng thái đã thực hiện xong, kết quả thất bại
+            - Then & catch (chú ý bản chất phương thức then cũng trả về 1 promise rồi nên nối chuỗi được)
+                    promise.then(function(){} <truyền callback nếu cần thôi>)       // nếu thành công (resolve())
+                    promise.catch(function(){} <truyền callback nếu cần thôi>)      // nếu thất bại (reject())
+                    promise.finally(function(){} <truyền callback nếu cần thôi>)    // có thể k cần
+                => Có thể viết gọn lại thành chuỗi then catch finally, có thể trả về dữ liệu thông qua resolve()/reject()
+                        https://youtu.be/_4F8ihblZFU?t=626
+
+            - Chain: lồng nhau chuỗi .then.then....catch.finally  // do then có kiểu trả về là promise, then có thể có nhiều, reject chỉ có 1 và finally có thể k cần, link video: https://fullstack.edu.vn/learning/javascript-co-ban?id=bd0b4c2f-f927-4a49-9496-91d515393742
+                        promise
+                            .then(function() {
+                                return 1;            // khi callback trong then return value k phải new Promise thì then (hàm gọi callback đó) sẽ return value mà cb trả về luôn (tức ở đây cb return 1 thì then return 1)
+                                
+                                return new Promise(function(resolve) { // TH2: cb return 1 new Promise (ở đây trả về resolve sau 3s) thì nó sẽ đợi 3s sau đó cb trả về Promise mới có kết quả là resolve và then cũng trả về như vậy
+                                    setTimeout(function() {
+                                        resolve()    // nếu ở TH2 thì data bên dưới vẫn là undefined vì k có trả về value gì, nếu resolve(number, obj, arr, ... thì bên dưới mới có)
+                                    }, 3000)         // chú ý nếu k truyền gì ta có thể viết gọn thành setTimeout(resolve, 3000) thôi
+                                })                   
+                            }).then(function(data) {     // data là số 1 bên trên return đó, nếu k return như trên thì data là undefined
+                                console.log(data);
+                                return 2;
+                            }).then(function(data) {
+                                console.log(data);
+                                return 3;
+                            }).then(function(data) {
+                                console.log(data)
+                            }).catch(function(error) {
+
+                            }).finally(function() {
+
+                            });
+                ==> Quay lại bài toán ở phần đầu mục Promise: ta code setTimeout 1s sau in ra 1 và bên dưới là in ra 2, nhưng thực tế 2 in ra trước 1, giờ muốn đồng bộ để 1 in trước rồi 2 in sau sẽ là
+                        function sleep(ms) {
+                            return new Promise(function(resolve) {
+                                setTimeout(resolve, ms)
+                            })
+                        }
+
+                        sleep(1000)
+                            .then(function() {
+                                console.log(1);
+                                return sleep(1000)
+                            }).then(function() {
+                                console.log(2);
+                                return sleep(1000)
+                            }).then(function() {
+                                console.log(3);
+                                return sleep(1000)
+                            }).then(function() {
+                                console.log(4);
+                                return sleep(1000)
+                            })
+                    --> gọn đc bằng arrow function
+            - Promise.resolve, Promise.reject:
+                -> Ta có bỏ đi phần logic để trả về trạng thái resolve/reject để vết gọn lại trong trường hợp chỉ muốn resolve/reject thôi, thay vì
+                            var promise = new Promise(
+                                // Executor
+                                function(resolve, reject) {
+                                    // logic
+                                    // thành công: resolve(<argument nếu cần>)
+                                    // thất bại: reject(<argument nếu cần>)
+                                }
+                            )
+                    thành   var promise = Promise.resolve('Thành công') hoặc Promise.reject('Có lỗi')
+
+            - Promise.all: https://youtu.be/pxyxbaq8i8c?t=746
+                + Cho Ví dụ:
+                            var promise1 = new Promise(function(resolve) {
+                                setTimeout(function() {
+                                    resolve([1])
+                                }, 2000)
+                            })
+
+                            var promise2 = new Promise(function(resolve) {
+                                setTimeout(function() {
+                                    resolve([2, 3])
+                                }, 2000)
+                            })
+                + Giờ ta muốn lấy 2 kết quả trả về trên để gộp thành 1 mảng, thay vì đợi tuần tự 2 + 5 = 7s mới có thể lấy kết quả, ta có thể chạy đồng thời cả 2 (và phải khi cả 2 hoàn thành - tức 5s)
+                            Promise.all([promise1, promise2])   
+                                .then(function(result) {
+                                    console.log(result)  // 1 mảng có 2 phần tử lần lượt là mảng [1] và mảng [2, 3]
+
+                                    // gộp mảng: nếu muốn sang 1 mảng mới
+                                    let newArr = result[0].concat(result[1])
+                                    let newArr = [...result[0],...(result[1])]
+                                    // nếu muốn gộp vào 1 mảng cũ
+                                    result[0].concat(result[1])
+                                })
+                        -> đoạn then trên có thể gọn hơn thành (và arrow function sẽ gọn hơn nữa)
+                                .then(function([result1, result2]) {    // có thể thay result thành mảng 2 kết quả trả về luôn
+                                    console.log(result1.concat(result2))
+                                })
+                + Luôn phải chú ý .catch vì 1 trong 2 lỗi mà k catch là hỏng hết
+
+
+        ==> Bài vận dụng quan trọng, hãy code lại cho hiểu: Có trong file code để chạy thử
+    
+            /**
+            * Fake API: Ta sẽ thực hiện in thử ra trang web "Tên người cmt: Nội dung cmt của người đó"
+            * -> Ở đây ta chỉ mô phỏng bằng 2 mảng users và comments nên lấy chỉ việc return :D, nhưng thực tế sẽ là trên database sẽ phức tạp hơn, và chắc chắn phải dùng promise cho các tác vụ API như vậy
+            * 1. Lấy array comments, sau đó lấy ra userIds của những người cmt bằng map (chỉ id thôi nên dùng map, filter để lấy cả đối tượng cơ)
+            * 2. Từ userIds trên ta lấy ra danh sách các user trong array users (lấy toàn bộ đối tượng từ id, name, ... nhé chứ k phải chỉ có name)
+            * 3. Sau khi lấy được thông tin các usersComment ta sẽ trả về 1 đối tượng chứa thông tin user và cmt của người đó: {users: usersComment, comments: comments}
+            * 4. Từ Object trên, ta tạo ra 1 string or array.join('') chứa các thẻ li dạng user: cmt của user đó rồi đưa vào 1 thẻ ul bằng innerHTML
+            */
+            
+            let users = [
+                {
+                    id: 1,
+                    name: 'Nguyễn Văn A',
+                },
+                {
+                    id: 2,
+                    name: 'Sơn Đặng',
+                },
+                {
+                    id: 3,
+                    name: 'Trần Văn B',
+                },
+                // ...
+            ];
+
+            let comments = [
+                {
+                    id: 1, // id của comment, có thể theo thứ tự comment
+                    user_id: 1,
+                    content: 'Anh Sơn chưa ra video :(',
+                },
+                {
+                    id: 2,
+                    user_id: 2,
+                    content: 'Vừa ra xong em ơi!',
+                },
+                {
+                    id: 3,
+                    user_id: 1,
+                    content: 'Cám ơn anh^^'
+                }
+            ];            
+
+            /* 
+                Hàm này có nhiệm vụ lấy ra comments, vì là API nên sẽ dùng bất đồng bộ, dùng setTimeout vì tình trạng mạng có thể nhanh chậm khác nhau.
+                Ở đây ta chỉ đang mô phỏng bằng 1 mảng comments nhưng thực tế nó là ở database, truy vấn phức tạp hơn, và buộc dùng promise cho API nhé
+            */
+            function getComments() {
+                return new Promise((resolve, reject) => {
+                    setTimeout(() => {
+                        resolve(comments);
+                    }, 1000);
+                });
+            }
+
+            /*
+                Lần gọi này sẽ lấy ra thông tin user(name, id, ...) và comment của người đó
+            */
+            getComments()
+                .then(comments => {
+                    // console.log(comments);  // clg xem thử
+                    let userIds = comments.map(cmt => cmt.user_id);
+
+                    return getUserByIds(userIds)
+                        .then(usersComment => ({
+                            users: usersComment,
+                            comments: comments,
+                        }))
+                        .then(data => {
+                            // console.log(data);
+                            let commentBlock = document.querySelector('ul.comment-block');
+                            let html = '';
+
+                            // ở đây có thể for cho users và find cho comments nhé, chỉ là tìm id tương ứng giữa 2 cái rồi cho thông tin vào li thôi
+                            data.comments.forEach(cmt => {
+                                let userForThisCmt = data.users.find(
+                                    user => user.id === cmt.user_id
+                                );
+                                html += `<li>${userForThisCmt.name}: ${cmt.content}</li>`;
+                            });
+                            console.log(html);
+                            commentBlock.innerHTML = html;
+                        });
+                })
+                .catch(error => {
+                    console.log(error.message);
+                });
+
+            /*
+            *   Hàm này dùng cho hàm getComments bên trên, để dưới cũng đc vì tính chất hoisting nhưng chỉ áp dụng cho declaration function thôi
+            *   Truyền vào danh sách user_ids trong comment và trả về các user có id trong user_ids đó
+            *   Ở đây ta lấy trực tiếp mảng users ở bên trên, tuy nhiên thực tế là ở database nên phải dùng promise nhé
+            */
+            function getUserByIds(userIds) {
+                return new Promise((resolve, reject) => {
+                    // Có 1 bước get users từ database ra để dùng cho code bên dưới nhé
+
+                    // danh sách user có trong user_id của comments
+                    let result = users.filter(user => userIds.includes(user.id));
+                    setTimeout(() => {
+                        resolve(result);
+                    }, 1000);
+                });
+            }
+
+    ** Fetch:   https://fullstack.edu.vn/learning/javascript-co-ban?id=845b7b3e-86d9-4af9-987b-4d7cd124ed43, (video F8)
+                https://viblo.asia/p/tim-hieu-fetch-api-p1-bWrZngbrlxw#_tao-mot-request-1 (tìm hiểu qua)
+                https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch (using fetch: thêm field option vào cho fetch)
+                https://jsonplaceholder.typicode.com/   (fake api)
+        -> VD:
+                let postAPI = 'https://jsonplaceholder.typicode.com/posts';
+
+                /**
+                * Phương thức fetch() trả về một promise có trạng thái resolves với giá trị là response cho request đó.
+                * Khi promise resolves, response được truyền tới .then. Đây là nơi mà có thể sử dụng response. Nếu request không thành công, thì sẽ chuyển tới .catch với tham số là lỗi tương ứng.
+                */
+                fetch(postAPI)
+                    .then(response => response.json()) // response.json() sẽ Json.parse luôn: chuyển sang dữ liệu JS
+                    .then(posts => {
+                        // console.log(posts);
+                        let html = posts.map(
+                            post => `<li>
+                                <h2>${post.title}</h2>
+                                <p>${post.body}<p>
+                            </li>`
+                        );
+                        document.querySelector('.comment-block').innerHTML = html.join('');
+                    })
+                    .catch(err => console.log('có lỗi'));
+
+    ** JSON server: API Server (Fake), Mock API
+                    https://fullstack.edu.vn/learning/javascript-co-ban?id=5d91ae2c-f665-4b2c-8c8e-11d7f9a6eac9 (xem kĩ, có thể cài local thôi k cần global tránh cài linh tinh vào máy)
+                    https://github.com/typicode/json-server
+        - Sử dụng cho front-end khi chưa biết làm back-end: tạo 1 server để làm việc gần giống như BE
+        - Nên cài thử vào project thay vì cài global (sau làm BE k cần nữa)
+        - Ta sẽ tạo project JSON_server để làm mẫu theo video
+    ** Postman: là app giúp làm việc với api dễ dàng hơn, gửi 4 hành động CRUD mà k cần phải code
+        * 4 hành động thao tác dữ liệu CRUD:
+            - Create: tạo mới       -> POST
+            - Read: Lấy dữ liệu     -> GET
+            - Update: Chỉnh sửa     -> PUT / PATCH: phân biệt https://chungtran4078.github.io/put-vs-patch-in-restfull/ (put phải gửi bản ghi đầy đủ nếu k nó chỉ cập nhật field ta gửi còn lại thành null hết, patch chỉ cần gủi những thứ cần cập nhật còn lại k đổi)
+            - Delete: Xóa           -> DELETE
+        * Sử dụng postman:
+            - Get: lấy bình thường, nhưng nếu thêm /id vào sau url sẽ lấy được object có id đó 
+            - Post: https://youtu.be/CvX_5uyUXSs?t=643, thường chọn Post, body rồi pick x-www-form-urlencoded
+            - Delete: https://youtu.be/CvX_5uyUXSs?t=786, chỉ cần chọn delete rồi thêm vào url '/idnumber'
+            - Update (Put/patch): chọn put/patch, sửa nội dung cần và thêm vào url đuôi '/idnumber'
+        * Xem trạng thái tab network trên devtools: https://youtu.be/TRjVXmk8q8I?t=1121
+
+        ==> Thêm sửa xóa khóa học với Fetch và REST API: https://fullstack.edu.vn/learning/javascript-co-ban?id=468f2344-7c11-40d2-8492-8dd89f99d444
+            <video trong link trên rất nặng kiến thức, nên xem kĩ + đọc code để hiểu rõ nhiều vấn đề mới>
+
+                    let courseAPI = 'http://localhost:3000/courses';
+                    function start() {
+                        // getCourses(courses => {
+                        //     // console.log(courses);
+                        //     renderCourses(courses);
+                        // });
+
+                        // đoạn code kèm arrow function trên viết tường minh thành:
+                        // getCourses(function (courses) {
+                        //     renderCourses(courses);
+                        // });
+                        // -> Ta thấy truyền vào 1 function (có tham số) bên trong gọi 1 function khác có cùng tham số nên gộp lại được thành:
+                        getCourses(renderCourses); // truyền tham số là 1 hàm vào chứ k phải gọi hàm nhé, giống resolve trong setTimeout nếu k truyền gì vào resolve
+
+                        handleCreateForm(); // Có thể cho vào onclick ở file HTML cũng đc
+                    }
+
+                    start();
+
+                    // Functions:
+                    /**
+                    * Truyền vào 1 callback và thực hiện lấy đối tượng ở trong file db.json và lưu vào callback???
+                    * @param {*} callback
+                    */
+                    function getCourses(callback) {
+                        fetch(courseAPI)
+                            .then(response => response.json())
+                            .then(callback); // dòng này là tđn nhỉ. Gán callback truyền vào hàm bằng cái response.json()??
+                        // nó không phải callback => callback (return) vì sẽ làm callback then bên dưới nhận khác với callback truyền vào đầu hàm
+                    }
+
+                    /**
+                    * Tạo ra các thẻ li chứa các đối tượng mảng ở file db.json
+                    *
+                    * Lưu ý ở phần nút update, ta cần dữ liệu cả name, desc chứ k chỉ id nên ta sẽ thử truyền cả this vào trong hàm,
+                    * chú ý là this truyền như bình thường chứ k phải ${this}, truyền thử course hay ${course} vào mà nó k được
+                    * À sai cmnr, this là cả cụm <button onclick="handleUpdateCourse(this)">Update</button> chứ không phải đối tượng course cần
+                    *
+                    * -> 1 là truyền hết dữ liệu vào name, description, id, ...
+                    *    2 là lấy thêm index trong map, truyền courses[index] -> vẫn lỗi vì nó giống truyền ${course}
+                    *    3 là truyền mỗi id, còn lại thêm class/id cho thẻ h4, p kia để từ id ta select được đối tượng, kiểu .name1, .desc1, ...
+                    *      hoặc ta chỉ cần id còn qSelector('.course-item-${id} h4/p') để lấy name hoặc description (hợp lý)
+                    *    4 Cũng chỉ truyền id và dùng fetch(url/id) kiểu get (default) ta sẽ lấy được cả course đấy
+                    * @param {*} courses
+                    */
+                    function renderCourses(courses) {
+                        let listCoursesBlock = document.querySelector('ul#list-courses');
+                        let html = courses.map(
+                            course => `
+                            <li class="course-item-${course.id}">
+                                <h4>${course.name}</h4>
+                                <p>${course.description}</p>
+                                <button onclick="handleDeleteCourse(${course.id})">Delele</button>
+                                <button onclick="handleUpdateCourse(${course.id})">Update</button>
+                            </li>`
+                        );
+                        listCoursesBlock.innerHTML = html.join('');
+                    }
+
+                    /**
+                    * add Event khi bấm createBtn sẽ lấy dữ liệu 2 thẻ input và truyền vào hàm createCourse để tạo
+                    */
+                    function handleCreateForm() {
+                        let createBtn = document.querySelector('#create-btn');
+                        createBtn.onclick = function () {
+                            let name = document.querySelector('input[name="name"]').value;
+                            let description = document.querySelector(
+                                'input[name="description"]'
+                            ).value;
+                            // console.log(name);
+
+                            let formData = {
+                                name: name,
+                                description: description,
+                            };
+
+                            // createCourse(formData);
+                            // -> hàm trên sẽ tạo đối tượng vào file db.json cũng như trên server, tuy nhiên phải reload lại page mới hiện,
+                            // muốn hiện ra luôn mà page k phải F5 hay tự động reload lại trang (tức text chèn vào luôn mà k cần refresh ấy) thì:
+                            createCourse(formData, function () {
+                                getCourses(renderCourses);
+                            });
+                            // --> nhưng mà k đúng, vì lúc được lúc không, đa số reload lại page???
+                        };
+                    }
+
+                    /**
+                    * Tạo khóa học bằng fetch với data truyền vào (object môn học) và callback
+                    * @param {*} data data được truyền từ handleCreateForm dạng object có key name, description
+                    * @param {*} callback truyền vào 1 cb và handleCreateForm gọi lại getCourse...
+                    */
+                    function createCourse(data, callback) {
+                        let option = {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json', // thiếu là lỗi nhé, xem cách dùng tại: https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
+                                // 'Content-Type': 'application/x-www-form-urlencoded',
+                            },
+                            body: JSON.stringify(data),
+                        };
+                        fetch(courseAPI, option) // default là get nên k cần option
+                            .then(response => response.json())
+                            .then(callback);
+                    }
+
+                    /**
+                    * Được gọi ở button tạo ra trong hàm renderCourse <attr event onclick>, thực hiện query thẻ li và remove
+                    * @param {*} id truyền id của object cần xóa
+                    */
+                    function handleDeleteCourse(id) {
+                        let option = {
+                            method: 'DELETE',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                        };
+
+                        fetch(`${courseAPI}/${id}`, option)
+                            .then(response => response.json())
+                            .then(function () {
+                                // getCourses(renderCourses); // tương tự create, thêm dòng này vào để đỡ phải reload thì course mới biến mất
+                                // -> Tuy nhiên phải gọi lại api dòng trên rất phiền (hiệu suất ảnh hưởng k thì k biết) nên ta sẽ thêm class cho thẻ li được tạo, và chỉ cần qSelector rồi remove là xong
+                                let courseItem = document.querySelector(`.course-item-${id}`);
+                                if (courseItem) {
+                                    courseItem.remove();
+                                }
+                            });
+                    }
+
+                    /**
+                    * Được gọi ở attr event (onclick) trong hàm render tạo nút "Update"
+                    * Yêu cầu việc update nội dung: tạo 1 nút bấm "Update" cạnh nút "Delete", khi click vào:
+                    *  - Nội dung của object hiện tại sẽ chuyển vào ô input (tức name, description điền vào thẻ input bên dưới để sửa).
+                    *      Có thể tạo nút Update bằng label để click vào chuyển cursor đến input luôn (có điều phải thêm id cho thẻ input name/desc, sửa file html or js đều được rồi dùng for="id")
+                    *  - Nút "Create" bị ẩn đi và 1 nút "Save" hiện ra khi click vào sẽ lưu thay đổi khi bấm
+                    *      (tốt nhất là thêm 1 button cạnh createBtn và mặc định display none, khi click mới hiện)
+                    *      (Cách 2 là sửa id của nút create thành save, đổi tên nút từ create thành save luôn, lưu xong cập nhật lại -> phức tạp k hiệu quả)
+                    *  - Sau khi lưu xong thì lại ẩn nút save và hiện nút create, đồng thời xóa nội dung thẻ input
+                    * @param {*} id vì ta cần nội dung của course để gán vào input nên muốn truyền cả course thay vì course.id như delete vừa làm. Tuy nhiên k biết cách lấy (toàn lỗi nên lại dùng id :D)
+                    * Có thể từ id ta dùng querySelector lấy thẻ h4 và p của class thẻ li để lấy nội dung điền vào thẻ input (hoặc đặt class theo id cho h4 và p)
+                    * Cũng có thể dùng fetch(url/id) để lấy nội dung của course đó, mỗi tội cứ fetch nhiều hơi lú và phải làm trong fetch (thử đặt biến lưu vào mà cứ lỗi)
+                    */
+                    function handleUpdateCourse(id) {
+                        // lấy dữ liệu của object có id trên rồi xử lý trong then
+                        fetch(`${courseAPI}/${id}`)
+                            .then(response => response.json())
+                            .then(course => {
+                                // đến đây course là dữ liệu object có id mình cần
+
+                                // when click updateBtn
+                                let createBtn = document.querySelector('#create-btn');
+                                let saveBtn = document.querySelector('#save-btn');
+                                createBtn.style.display = 'none';
+                                saveBtn.style.display = 'block';
+
+                                let inputName = document.querySelector('input[name="name"]');
+                                let inputDesc = document.querySelector('input[name="description"]');
+                                inputName.value = course.name;
+                                inputDesc.value = course.description;
+
+                                // add event saveBtn
+                                saveBtn.onclick = function () {
+                                    let formDate = {
+                                        name: inputName.value,
+                                        description: inputDesc.value,
+                                    };
+                                    updateCourse(formDate, course.id, function () {
+                                        getCourses(renderCourses);
+                                    });
+
+                                    // after click saveBtn (cho ra ngoài onclick nó bị lỗi chưa kịp chỉnh sửa rồi bấm lưu đã về như cũ rồi (chưa kịp bấm để nhận onclick ấy thì nó clear rồi))
+                                    createBtn.style.display = 'block';
+                                    saveBtn.style.display = 'none';
+                                    inputName.value = '';
+                                    inputDesc.value = '';
+                                };
+                            });
+                    }
+
+                    function updateCourse(data, id, callback) {
+                        let option = {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(data),
+                        };
+                        fetch(`${courseAPI}/${id}`, option)
+                            .then(response => response.json())
+                            .then(callback);
+                    }
+            --> chỉ cần thêm nội dung course vào file db.json hoặc postman là được
+
+*** ECMAScript6 - ECMAScript 2015 - ES6
+    ** let & const: (https://viblo.asia/p/phan-biet-kieu-bien-var-let-va-const-trong-javascript-ORNZqaOnZ0n)
+        * Var:
+            - Có thể truy cập global (phạm vi là global scoped), dù cho có khởi tạo ở scope block nào thì vẫn có thể gọi ở bên ngoài scope đó
+                    {
+                        var x = 'inner scope'
+                    }
+                    console.log(x) // 'inner scope', vẫn truy cập được từ bên ngoài
+
+                --> dẫn đến vấn đề:
+                    var greeting = "hey hi";
+                    if (true) {
+                        var greeting = "say Hello instead"; // cập nhật lại giá trị, Ở đây là khai báo lại ở scope trong thì kết quả của biến trên vẫn thay đổi khi ra bên ngoài (còn nếu chỉ gán greeting = "..." chứ k phải khai báo/khởi tạo lại thì var, let đều thay đổi thôi (kiến thức cơ bản với mọi ngôn ngữ mà), còn const k đổi đc)
+                    }
+                    console.log(greeting); //"say Hello instead"
+            
+            - hoisting: dù khai báo ở đâu thì biến vẫn được đưa lên đầu scope trước khi code thực hiện
+                    console.log (greeting);
+                    var greeting = "say hello";
+                -> sẽ được biên dịch là:
+                    var greeting;
+                    console.log(greeting);  // greeting is undefined
+                    greeting = "say hello"; // here greeting is 'say hello'
+
+        * let:
+            - Có phạm vi là block scoped: không thể truy cập từ bên ngoài như var
+                    {
+                        let hello = "say Hello instead";
+                        console.log(hello); // "say Hello instead"
+                    }
+                    console.log(hello); // hello is not defined
+
+            - let cho phép cập nhật giá trị của biến (cùng hoặc scope trong đều được) nhưng không đc tái khai báo lại biến (var thì được và thay đổi value về sau luôn)
+                    let greeting = "say Hi";
+                    console.log(greeting); //"say Hi"
+
+                    greeting = "say Hello instead"; // đây là phép gán thông thường thôi, kiến thức cơ bản của mọi ngôn ngữ
+                    console.log(greeting); //"say Hello instead"
+
+                -> thậm chí: (giống var, và đây chỉ là gán thông thường như mọi kiểu dữ liệu khác của c++, java thôi)
+                    let greeting = "say Hi"; // here greeting is "say Hi"
+                    {
+                        greeting = "say Hello instead";
+                        console.log(greeting) // say Hello instead
+                    }
+                    console.log(greeting) // say Hello  -> sửa bên trong hay cùng cấp thì bên ngoài vẫn đổi
+
+                    -----------------------------------------------------
+
+                    let greeting = "say Hi";
+                    let greeting = "say Hello instead"; // error: Identifier 'greeting' has already been declared
+
+            - Tuy nhiên, với các block khác nhau thì tái khai báo biến sẽ không sinh ra lỗi vì đối với từng scope, mỗi biến sẽ được xem xét là 1 biến riêng khác biệt.
+                    let greeting = "say Hi";
+                    if (true) {
+                        let greeting = "say Hello instead";     // đây là 1 biến khác
+                        console.log(greeting); // "say Hello instead"
+                    }
+                    console.log(greeting); // "say Hi"  // biến ban đầu
+        
+            - let cũng có hoisting tuy nhiên với var thì biến sẽ khởi tạo mặc định là undefined trước còn let thì k khởi tạo mặc định nên sẽ gặp lỗi Reference Error (có thể hiểu ngầm là k có hoisting)
+
+        * const:
+            - Nếu là primitive (string, number, boolean, null, và undefined) thì không thể tái khai báo hay cập nhật giá trị trong scope CÙNG CẤP
+                    const greeting = "say Hi";
+                    greeting = "say Hello instead"; // error : Assignment to constant variable. 
+
+                -> kể cả có đặt trong code block
+                    {
+                        greeting = "say Hello instead"; // vẫn mỗi nhé
+                    }
+
+                    ------------------------------------------------
+
+                    const greeting = "say Hi";
+                    const greeting = "say Hello instead"; // error : Identifier 'greeting' has already been declared
+
+            -> Nhưng giống với let: nếu trong scope nhỏ hơn ta tái khai báo biến thì nó là biến khác: (nếu cập nhật giá trị thì ở bất kì scope kể cả nhỏ hơn cũng lỗi vì nó k gán được giá trị mới)
+                    const x = 1;
+                    {
+                        const x = 2;
+                        // nhưng nếu thay dòng trên thành cập nhật x = 2 thì lỗi vì k đc phép cập nhật giá trị
+                        console.log(x)  // 2
+                    }
+                    console.log(x) // 1
+
+            - Nếu là biến reference(object, array, và function) vẫn không thể tái khai báo hay cập nhật giá trị của BIẾN nhưng có thể cập nhật giá trị thuộc tính của biến
+                    const greeting = {
+                        message : "Hello",
+                        number : "five"
+                    }
+
+                    greeting.message = "say Hello instead";
+                    console.log(greeting); // {message:"say Hello instead",number:"five"}
+    
+    ** Template literals + mutiple line 
+        - Thay phép cộng string thành `...${}...${}...` cho gọn hơn
+        - Muốn hiện kí tự đặc biệt trong string thì thêm \ vào trước (k chỉ literals mà string thường cũng thế)
+            `\\` để in dấu '\', `\'` để in dấu nháy đơn, ... thậm chí `...\${variable}` nó sẽ in cả cụm '${variable chứ k phải value của variable}' ra
+        - Kết hợp mutiple line: 
+            const lines = 'line1 \n line2 \n line3 \n line...' hoặc 'line1\n' + 'line2\n' + 'line3\n' + ...
+            -> const lines = `Line1 
+                                line2
+                                line3
+                                line4`...
+
+    ** Arrow function: đã nói ở phần function nhé, vẫn dùng đó
+        - Lưu ý nhỏ khi return object thôi, ở phần spread operator đã nói rồi ấy
+                    const createObject = function(a, b) {
+                        return {
+                            a: a,
+                            b: b
+                        }
+                    }
+            ->>     const createObject = (a, b) => ({a: a, b: b}) // ta k thể viết {a: a, b: b} được mà phải bọc ngoặc tròn vào
+        - method trong object kiểu arrow function k dùng được this (context)
+                    const course = {
+                        name: 'JS',
+                        getName: function() {
+                            return this;
+                        }
+                        nếu viết arrow function thì k dùng this đc
+                        getName: () => this // undefined
+                    }
+            --> vậy nên ở phần Object constructor có note rằng arrow function không dùng được
+    ** Class: giống hầu hết ngôn ngữ lập trình đã được học
+        - VD về object constructor:
+                    function Course(name, price) {
+                        this.name = name;
+                        this.price = price;
+
+                        this.getName = function() {
+                            return this.name;
+                        }
+
+                        var isSuccess = false; // ...
+                    }
+
+                    const php = new Course('PHP', '1000')
+                    const js = new Course('JS', '2000')
+
+        - Class giúp dễ hình dung hơn (oop hơn), và gọn hơn rất nhiều khi nhiều code hơn 
+                    class Course {
+                        constructor(name, price) {
+                            this.name = name;
+                            this.price = price;
+                        }
+
+                        getName() {
+                            return this.name;
+                        }
+
+                        getPrice() {
+                            return this.price;
+                        }
+                    }
+    ** Default parameter values:
+        - ES5:
+                    function logger(log) {
+                        if(typeof log === 'undefined') {
+                            log = 'Default value';
+                        }
+                        console.log(log);
+                    }
+                    logger();
+                    logger(undefined); // giống trên
+                    logger('message');
+        - ES6: 
+                    function logger(log = 'Default value') {
+                        console.log(log);
+                    }
+            hoặc    function logger(msg, type = 'log') {
+                        console[type](msg);
+                    }
+                    logger('Message')
+                    logger('Message', 'warn')
+                    logger('Message', 'error')
+    ** Enhanced object literals:
+        * Định nghĩa key, value cho object:
+                    var name = 'JS'
+                    var price = 'free'
+                    
+                    var course = {          ngắn gọn hơn thành      var course = {      khi key trùng với value
+                        name: name,                                     name,
+                        price: price                                    price
+                    }                                               }
+        * Định nghĩa method cho object: 
+                    var course = {
+                        ... như trên,
+                        getName: function() {
+                            return name;
+                        }
+                        -> gọn hơn thành
+                        getName() {
+                            return name;
+                        }
+                    }
+        * Định nghĩa key cho object dưới dạng biến:
+                    var fieldName = 'name';
+                    var fieldPrice = 'price'
+                    var coruse = {
+                        [fieldName]: 'JS',
+                        [fieldPrice]: '1000'
+                    }   // console.log nó ra y hệt trên {name: 'JS', price: '1000'}
+                    --> dễ dàng thay đổi: chỉ cần đổi giá trị biến fieldName/Price là đổi đc tên key nhanh, thực tế nhiều khi cần lấy value của object ra tạo thành key nên phải dùng cách này
+
+    ** Destructuring, REST:
+        * Destructuring: giúp dễ dàng gán value của mảng/object cho biến:
+            - Với array:
+                    var array = [1, 2, 3]
+                    var a = array[0]
+                    var b = array[1]
+                    var c = array[2]
+                    console.log(a, b, c)  
+                -> Ta có thể viết gọn thành:
+                    var [a, b, c] = array; // kết quả tương tự như trên
+                    var [a, , c] = array // nếu không muốn lấy biến b -> lúc này console.log(a, b, c) thì b là undefined nhé, chỉ nên clg(a, c) thôi
+                    var [a, b] = array // nếu chỉ muốn lấy 2 biến đầu, các biến sau nếu có nhiều cũng bỏ qua (muốn lấy dùng Rest)
+
+            - Với object:
+                    var course = {
+                        name: 'JS',
+                        price: 1000,
+                        image: 'image-address'
+                    }
+                    var {name, price} = object;     // chú ý phải đặt tên đúng với key trong object chứ k phải đặt tên tùy ý như array
+                                                    // đổi tên được kiểu {name: newName, price} tuy nhiên sau đó chỉ dùng tên mới thôi, tên cũ thành string rỗng (do trùng với document.name của JS: https://youtu.be/J1m4vLDUhEI?t=527)
+                    clg(name, price) // JS 1000
+
+        * Rest: muốn lấy những phần tử còn lại của mảng/obj (dưới dạng 1 mảng/obj) trừ những phần tử đã được destructuring thì
+            - Với array:
+                    var [a, ...rest] = array;
+                    clg(a, rest); // ra 1 và [2, 3]
+
+                    var [a, b, ...rest] = array; // tương tự 2 biến kia là 1, 2 và rest là [3]
+
+            - Với object:
+                    var {name, ...rest} = course;
+                    clg(rest); // 1 object thiếu cặp key-value của name thôi
+
+                -> nâng cao hơn, object có 1 object con bên trong nữa
+                    var course = {
+                        name: 'JS',
+                        price: 1000,
+                        image: 'image-address',
+                        childObj: {
+                            name: 'ReactJS'
+                        }
+                    }
+
+                    var {name, childObj} = course // nếu muốn lấy ra childObj   
+                    var {name, childObj: { name }} = course // nếu muốn lấy ra name của childObj, tuy nhiên do cả 2 key đều là name nên sẽ bị ghi đè bởi name sau -> clg(name) ra ReactJS
+
+                    -> khắc phục, đổi tên cho key được bằng cách thêm : newName (tuy nhiên khi đổi tên thì phải dùng tên mới, tên cũ bị đổi sẽ k dùng đc), vd:
+                    var {name: parentName, childObj: { name }} // lúc này parentName: JS còn name là ReactJS
+                    var {name: parentName, childObj: { name: childName }} // lúc này parentName: JS còn childName là ReactJS, name thành string rỗng (do trùng với document.name của JS: https://youtu.be/J1m4vLDUhEI?t=527)
+
+                -> khi lấy ra value k có trong object nó sẽ ra undefined, ta có thể gán value mặc định cho nó giống hàm:
+                    var {name, description} = course // name: JS, description: undefined
+                    var {name, description = 'default value'} = course // name: JS, description: default value -> còn nếu course có key này thì sẽ lấy value đó
+
+        ==> có thể áp dụng để xóa đi 1 element hoặc cặp key-value trong array/object mà không cần delete thông thường
+        ==> Toán tử ... khi dùng với destructuring nó là rest, dùng trong tham số của function kiểu function sum(...params) nó vẫn là rest(cứ nhầm là spread), còn trong TH khác nó là spread nhé
+                    function logger(...params) {
+                        clg(params);
+                    }
+
+                    logger(1, 2, 3, 4, 5, 6, 7, 8) // params là MẢNG [1, 2, 3, 4, 5, 6, 7, 8] vì nó dạng destructuring chỉ có rest, k có biến khác
+                    nếu thành (a, ...params) thì params là [2, 3, 4, 5, 6, 7, 8] (do a = 1 rồi)
+                    tương tự (a, b ...params) thì params là [3, 4, 5, 6, 7, 8] (do a = 1, b = 2 rồi)
+
+                -> tương tự cho object:
+                    function logger({ name, price, ...rest }) {
+                        clg(name, price, rest)
+                    }
+                    logger({
+                        name: 'JS', price: 1000, description: 'more infos', ...
+                    })
+                -> tương tự cho array: như trên và thay bằng dấu [] (nội dung này thuộc phần đầu video spread: https://fullstack.edu.vn/learning/javascript-co-ban?id=56ad484c-0c80-4145-95b1-919f8c036936)
+
+    ** Spread: đã nói ở trước khá sâu rồi          
+        - Ghép mảng, object: arr3 = [...array1, ...array2] hoặc obj3 = {...object1, ...object2} -> chú ý nếu TH có 2 key ở 2 object trùng nhau thì object gộp sẽ có key và value là value của cái ghi đè lần cuối      
+            -> có thể gán arr1 = [...arr2, etc] hoặc obj2 = {...obj1, someProp: etc}
+        - Truyền tham số với mảng:
+                    function clgAll (a, b, c) {
+                        clg(a, b, c)          // nhận 3 tham số và in cả 3 ra
+                    }
+                    let arr = [1, 2, 3], lúc này ta phải dùng clgAll(...arr) sẽ tương đương với clgAll(1, 2, 3) vì spead nó sẽ giải mảng ra
+            -> thường ngta sẽ dùng rest hơn: 
+                    function clgAll(...rest) {
+                        for (let i in rest) ...
+                    }
+    ** Tagged template literals:
+        - VD có thể truyền template literals vào function chứa rest:
+                    function highlight(...rest) {
+                        clg(rest)
+                    }
+                    let course = 'JS'
+                    let brand = 'F8'
+                    highlight`Học lập trình ${course} tại ${brand}!` // rest là 1 mảng chứa 3 phần tử: 1 là MẢNG con chứa 3 phần tử ['Học lập trình ', ' tại ', '!'], 2 là "JS', 3 là 'F8' 
+                                                                     // (các phần tử khác nội suy (là ${}) sẽ gom hết vào 1 mảng và là phần tử đầu tiên), các ${} còn lại là phần tử tiếp theo
+        - Cũng VD trên nhưng giờ ta muốn format 2 phần tử ${} và chuỗi đầu ra vẫn là `Học lập ...!`
+            -> Ý tưởng, ta sẽ đưa về dạng `Học lập trình <span>JS</span> tại <span>F8</span>!`, vậy ta sẽ dùng reduce như video: https://youtu.be/XV0d0A37sd8?t=553
+
+                    function highlight([first, ...strings], ...values) {    // first: 'Học lập trình', string: [' tại ', '!'], values: [các cụm ${}] -> mỗi bước reduce duyệt ta thêm 1 phần tử của values và string vào (sau đó removeFirst luôn), khởi tạo initVal là first nên mới phải tạo first như vậy
+                        return values.reduce(
+                            (acc, curVal) => [...acc, `<span>${curVal}</span>`, `${strings.shift()}`],
+                            [first]
+                        ).join('');
+                    }
+                    let course = 'JS'
+                    let brand = 'F8'
+                    let html = highlight`Học lập trình ${course} tại ${brand}!` // format html là xong
+
+                -> tường minh ra thành: <đây là return mảng, có thể dùng string rồi += `...` cũng được)
+                    return values.reduce(
+                        function (acc, curVal) {
+                            acc.push(`<span>${curVal}</span>`);
+                            acc.push(`${strings.shift()}`);
+                            return acc;
+                        },
+                        [first]
+                    ).join('');
+    ** Modules: import/export: https://fullstack.edu.vn/learning/javascript-co-ban?id=5af0c266-7df8-4350-83c3-99c190e6e910
+        - Là việc mình tách các ra các file(hoặc fol...) để xử lý nhiệm vụ riêng như logger, ...
+        - Khi ta import 1 file thì file đó cũng phải export 1 cái gì đó ra
+        - Để import đc module trong 1 file js thì khi link file js đó (trong <script></script>) cũng phải thêm attribute là type="module" nếu không sẽ lỗi Cannot use import statement outside a module (k thể dùng import bên ngoài 1 module - tức file hiện thời mình sử dụng câu lệnh import nó chưa là module)
+        - Với export default (chỉ 1 default thôi, export default logger phải trùng với function logger hay gì đó ở file đó chứ k export bừa được) thì ta import đc kiểu:
+                    import logger from './logger.js' // với logger ở đây có thể đổi tên khác như log, ... mà k cần giống y hệt bên export default ra gì
+                    logger('Msg', 'warn')
+        - Với export const variable thì dùng dạng destructuring (phải trùng vs tên export), kiểu:
+                    import logger, { TYPE_LOG, TYPE_WARN, TYPE_ERROR } from './logger.js'
+                    logger('Msg', TYPE_WARN)
+        - Ta cũng có thể chuyển các export const variable sang file khác (file logger import những gì cần thôi), file main.js sẽ import:
+                    import logger from './logger.js'
+                    import { TYPE_LOG, TYPE_WARN, TYPE_ERROR } from './contansts.js';
+                    logger('test message', TYPE_LOG);
+
+                -> Lưu ý ta không thể thay imd (import destructuring) trên thành import contansts from ... đc vì nó k export default
+                -> Có thể dùng ime: import * as contansts from './contansts.js' // constants ở đây là đối tượng module, clg ra để biết
+                                    logger('test message', constants.TYPE_LOG);
+        - Nâng cao hơn, thường dùng trong ReactJS, ta tạo fol logger rồi đưa file logger.js vào trong fol đó và tạo file index.js trong fol logger đó, ta muốn index làm trung gian để import và export các thứ (lúc này sẽ phải sửa file main.js import từ './logger/index.js và trong logger import constants phải là '../constants.js')
+                file index.js:  import logger from './logger.js'
+                                export default logger;
+                -> tắt thành:   export { default } from './logger.js'
+
+                file main.js chỉ cần: import logger from './logger/index.js'
+
+            --> muốn kiểu khác (import kiểu destructuring) thì có thể 
+                    sửa file index.js thành export { default as logger2 } from './logger.js'
+                    và  file main.js  thành import { logger2 } from './logger/index.js';    // lúc này dùng logger2 thay logger bên trên
+    
+        ==> Xem kĩ video và đọc thêm: https://viblo.asia/p/imports-va-exports-trong-javascript-es6-6J3ZgjyAKmB 
+    ** Option chaining(?.):     https://fullstack.edu.vn/learning/javascript-co-ban?id=cb33475f-205b-427b-a95e-497cabdec905
+                                https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining
+        * Giải quyết vấn đề phải ktra nhiều đối tượng (VD như linkedlist phải check quick != null && quick.next != null ý)
+        * Cho ví dụ:
+                    const obj = {
+                        name: 'Alice',
+                        cat: {
+                            name: 'Dinah'
+                        }
+                    };
+                    const dogName = obj.dog.name; // Lỗi ở dog.name, chú ý obj.dog không lỗi vì nó ra undefined, nhưng dog.name lỗi vì undefined làm gì có key mà trỏ
+            -> phải ktra thông thường kiểu:
+                    if (obj.dog && obj.dog.name) {  // chú ý k chỉ ktra obj.dog.name vì nếu k check obj.dog trước thì nó lỗi ngay trong if (như vd LinkedList nói ở trên)
+                        clg(obj.dog.name)           // à đúng ra thì k cần check dog.name vì nó undefined vẫn in ra k lỗi đc, nhưng nói làm vd phải check kĩ thôi
+                    }
+
+            -> lỗi phức tạp hơn:
+                    const obj = {
+                        name: 'Alice',
+                        cat: {
+                            name: 'Dinah',
+                            cat2: {
+                                name: 'Dinah2',
+                                cat3: {
+                                    name: 'Dinah3',
+                                }
+                            }
+                        }
+                    };
+                muốn clg cat3.name phải check rõ:
+                    if (obj.cat && obj.cat.cat2 && obj.cat.cat3) {
+                        clg(obj.cat.cat2.cat3.name)
+                    }
+
+            -> Giải pháp: thêm ? sau đối tượng nghi ngờ k có (phải hiểu nếu k ?. thì nó là lỗi gọi tới key từ 1 đối tượng undefined, nên ta cần tránh lỗi gọi từ undefined chứ k phải gọi tới đối tượng undefined)
+                    if (obj.cat?.cat2?.cat3) clg(obj.cat.cat2.cat3.name)    // giống như đoạn check như phần trên và nếu nó sai thì k in gì thôi
+                    // lệnh trên hiểu là nghi ngờ k có cat trong obj nên thêm ? vào sau cat trước khi .cat2 để tránh nó undefined mà gọi đến cat2 gây lỗi, chứ obj.cat k lỗi vì nó ra undefined!!
+                    // cat2 nghi ngờ k có trong cat1 nên phải ?.cat3 tránh lỗi khi undefined gọi tới key 
+        * Cú pháp: 
+            obj.val?.prop       // tránh lỗi khi val.prop
+            obj.val?.[expr]     // tránh lỗi khi val[expr] 
+            obj.array?.[index]  // tránh lỗi khi array[index]
+            obj.func?.(args)    // giống như property thôi, cái này check method func kia có tồn tại không, nhỡ gọi function rồi truyền args vào mà nó k tồn tại sẽ lỗi
+            -> nghi ngờ cái gì k có thì thêm ? vào sau nó trước khi gọi tới key gì(.key) từ nó
+
+*** Thực hành:
+    ** Tabs UI: https://fullstack.edu.vn/learning/javascript-co-ban?id=f4eec4c9-2dde-42ad-9a16-ac13e3c8782f
+        - Cho giao diện, thực hiện thêm js vào: click vào tab nào thì thêm line vào dưới chân, nội dung phải thay đổi theo tab đó
+        - Học thêm đc cách dùng nhanh querySelector<All>.bind(document)
+                    const $ = document.querySelector.bind(document);
+                    const $$ = document.querySelectorAll.bind(document);
+                    -> chỉ việc $('selector css vào')
+        - Cách lấy tọa độ và set vị trí: phải thêm đơn vị vào
+                    line.style.left = tabItemActive.offsetLeft + 'px';
+                    line.style.width = tabItemActive.offsetWidth + 'px';
+    
+    ** Music Player:    https://fullstack.edu.vn/learning/javascript-co-ban?id=003a78af-1a39-4948-8ff8-f39ebe83bdb4
+                        https://static.collectui.com/shots/3671744/musicloud-revolutionary-app-for-music-streaming-large
+        - Xem qua giao diện mẫu: https://codepen.io/ng-ngc-sn-the-bashful/pen/oNYYLRp, mở devtools xem qua 1 lượt cho trực quan, tự thêm file music với ảnh vào project nhé F8 k add cho (codepen k để đc)
+            -> Chú ý giao diện mẫu chỉ để hiển thị cho dễ làm, còn vào js gần như thay đổi hết theo đối tượng được tạo theo code ở file html
+            -> Phần '.playlist .song .thumb' và '.cd-thumb' chỗ url background ban đầu chỉ là background-image: url() sau tự sửa thành background: shorthand để căn đẹp hơn, thêm cursor pointer vào input progress cho tua dễ
+            -> Chú ý '.cd .cd-thumb' đã dùng kĩ thuật padding-top: 100% để tạo hình vuông giữ tỉ lệ rồi nhé (w3band từng dùng 50% tỉ lệ 2:1 đó)
+        - Cách dùng xử lý cd nhỏ lại khi scroll xuống:
+                    const cd = $('.cd');
+                    cd.style.transition = 'all 0.3s';   // thêm vào cho mượt thôi :D
+                    const cdWidth = cd.offsetWidth;
+
+                    document.onscroll = function () {
+                        const scrollTop =
+                            window.scrollY || document.documentElement.scrollTop;
+                        const newCdWidth = cdWidth - scrollTop;
+                        // console.log(newCdWidth); // nó có thể âm nên chú ý
+                        cd.style.width = newCdWidth > 0 ? `${newCdWidth}px` : 0;
+                        cd.style.opacity = newCdWidth / cdWidth; // trong js không cần calc luôn
+                    };
+            -> Quan trọng nhất là xử lý newCdWidth: khi ta scroll chậm nó sẽ dễ bắt số liệu, và khi nó bắt đc scrollTop 
+            bằng với cdWidth thì newCdWith bằng 0 sẽ biến mất, còn cuộn tiếp nữa thì newCdWidth âm nó k phù hợp nên k 
+            gán nữa (chậm lắm mới bắt đc bằng 0, thường là ~0). Vậy khi cuộn nhanh nó k bắt đc ~0 mà kiểu bắt đc số to luôn 
+            đã âm rồi (âm thì k xét đc) -> vậy nên phải thêm đk vào nếu âm thì xét bằng 0 
+        - Cách lấy bài hát hiện tại: https://youtu.be/vAecGPWxzFE?t=1130, https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty?retiredLocale=vi, https://viblo.asia/p/mot-so-phuong-thuc-huu-ich-cua-object-trong-javascript-co-the-ban-chua-biet-Qbq5QEmJ5D8#_22-objectdefineproperty-8
+            -> xem trong file nhé: Thêm currentIndex và dùng defineProperty tạo thuộc tính currentSong, cách click playBtn xử lý bài hát (audio.play()/pause())
+            -> Cách copy _this là đối tượng app để dùng trong onclick (this trong onclick là đối tượng gọi event rồi)
+            -> Chú ý audio.onplay() và audio.onpause() để hợp về mặt logic (2 event này sẽ tự bắt khi nhạc chạy/dừng), ngoài
+            ra xem thêm các event khác tại: https://www.w3schools.com/tags/ref_av_dom.asp
+                - Properties:
+                    + ended: ktra kết thúc au/vid chưa
+                    + currentTime: lấy time hiện tại hoặc set time đến 1 giai đoạn nào đó (kiểu tua đến giây bao nhiêu ấy -> khả năng áp dụng click vào tua 5s kiểu vậy)
+                    + controls: có thể cài đặt cho phép điều khiển play/pause/sound/... hay không
+                    + defaultPlaybackRate: return or sets tốc độ phát MẶC ĐỊNH của vid/au không ảnh hưởng tốc độ hiện tại
+                    + duration: trả về length (seconds) của vid/audio
+                    + loop: dùng để set xem lại sau khi vid/au hết: audioElement.loop = true/false
+                    + muted: return or sets tắt âm hay không
+                    + played / paused: ktra chạy hay dừng?
+                    + playbackRate: return or chỉnh tốc độ phát hiện tại
+                    + volumn: lấy hoặc chỉnh âm lượng, trong phạm vi từ 0.0 đến 1.0
+                    -> chú ý 1 số event sau khi dùng xong nên kết hợp element.load() để load lại cài đặt
+                - Event:
+                    + ended(): ktra kết thúc hay chưa, dùng để xử lý hết au/vid sẽ repeat hay next/prev
+                    + load(): reload lại au/vid
+                    + play/pause()
+                    + ratechange(): fires(bắt event) khi tốc độ phát bị thay đổi
+                    + seeked(): fires khi kết thúc hành động tua, kiểu khi ấn vào vị trí tgian khác trong vid/au xong và nó đã chuyển currentTime đến đó ấy
+                    + seeking(): khi bắt đầu hành động tua, kiểu mới chỉ click vào vị trí mới thôi, currentTime chưa cập nhật nó đã fires ấy
+                    + volumnchange():
+                    + timeupdate: fires khi vị trí thời gian hiện tại thay đổi: khi đang phát hoặc tua nó cũng bắt được sự kiện
+            -> ứng dụng cho tua:
+                        // Khi tiến độ bài hát thay đổi:
+                        audio.ontimeupdate = function () {
+                            if (audio.duration) {
+                                // Có lúc duration = 0 do bài hát chưa tải xong hay sao ấy, chia ra NaN nên thêm đk vào
+                                const progressPercent = Math.floor(
+                                    (audio.currentTime / audio.duration) * 100
+                                );
+                                progress.value = progressPercent;
+                            }
+                        };
+
+                        // Xử lý tua bài hát:
+                        // -> onchange hay oninput đều được nhé
+                        progress.onchange = function () {
+                            // console.log(this.value); // this hay e.target đều là 1 và là progress nhé
+                            const seekTime = (audio.duration * this.value) / 100;
+                            audio.currentTime = seekTime;
+                        };
+        - CD quay: Phải xử lý vấn đề pause thì đứng yên còn play tiếp thì quay tiếp vị trí cũ chứ k phải quay từ đầu
+            -> Sử dụng thuộc tính css animation-play-state: https://css-tricks.com/how-to-play-and-pause-css-animations-with-css-custom-properties/
+               hoặc animate api của js: https://developer.mozilla.org/en-US/docs/Web/API/Element/animate
+            -> Dùng api của js thì xem code trong file, thêm animate.play()/pause() vào audio.onplay()/onpause() là được
+        - Xử lý next/prevSong: 
+            + Tạo hàm nextSong/prevSong thực hiện tăng/giảm curIndex đi, sau đó gọi lại hàm loadCurrentSong
+            + trong handlEvents tạo event onclick cho nút rồi gọi đến hàm vừa tạo, chú ý phân biệt _this(đối tượng app) với this(đối tượng gọi event) vì đã nhầm rồi đấy: 
+            -> sẽ có 2 lỗi:
+                +> Audio đang phát mà next sẽ lỗi k phát nữa vì path đã bị đổi, lúc này thêm dòng audio.play() sau khi gọi hàm (hoặc nhét vào cuối hàm) là được
+                +> cdThumbAnimate vẫn quay tiếp vòng mà bài cũ đang quay: cách reset là cancel rồi play lại (play đc gọi khi audio.play() lại rồi (trong onplay()) nên có thể bỏ)
+        - Xử lý random:
+            + random là 1 mode (chế độ) để khi bật lên khi ấn next/prevBtn đều chuyển đến 1 bài random và khác bài vừa phát (do-while)
+            + khi bật mode ta sẽ thêm class 'active' để hiện icon đỏ (chú ý cách dùng toggle 2 tham số)
+            + Sửa event bởi nextBtn và prevBtn nếu bật mode random và không
+        - Xử lý onended: next or repeat(mode giống random), (khi hết audio sẽ dừng tại cuối bài hát, chờ xử lý):
+            + check isRepeat để nếu next thì gọi nextBtn.click() (gọi trực tiếp sự kiện thay vì lắng nghe)
+            + còn nếu repeat thì phát lại, .load() và .play() đều được nhưng nên dùng .play() hơn vì dữ liệu bài đã load sẵn rồi, play() lại là được còn load phải tại lại thông tin
+        - Xử lý active song: css sẵn thêm active vào bài đang phát sẽ đổi màu song đó trong list songs
+            + Việc đầu tiên sửa hàm render: thêm index vào hàm map, tiếp theo sửa code thành 
+                    <div class="song ${index === this.currentIndex ? 'active' : ''}"> // nếu là bài đang phát thì thêm class active
+                -> hàm render chỉ gọi 1 lần duy nhất ở hàm start() khi chạy ứng dụng, nên sẽ k cập nhật được active khi đổi bài:
+                -> Cách 1: gọi hàm render lại mỗi khi next/prevSong (theo F8: https://youtu.be/vAecGPWxzFE?t=4580)
+                    -> It bài còn đc chứ nhiều bài ấn next có khi lag, đơ, hiệu năng ảnh hưởng lớn
+                -> Cách 2: mỗi khi cập nhật bài(cập nhật currentIndex) sẽ remove '.active' ở bài cũ và thêm vào bài mới:
+                    -> 2.1: dùng querySelectorAll lấy hết các element bài hát ra 1 NodeList, sau đó dùng index cũ và mới để truy cập vào LIst đó xóa và thêm active thôi
+                        -> Lưu ý file html ban đầu chỉ tạo mỗi 3 thẻ div.song làm mẫu để code, sau khi render mới có nhiều bài, khi qSA để lấy NodeList bài hát trước khi chạy
+                        hàm render thì nó sẽ chỉ lấy được 3 song code mẫu, vậy nên nên dùng let/var thay vì const và chạy qSA sau hàm render thì hơn (để cuối hàm render)
+                    -> 2.2: mỗi lần sẽ querySelector bài cũ bằng nth-of-child/type để lấy cái cũ và cái mới dựa vào index cũ và mới để add/remove '.active'
+                    => nên dùng 2.1 hơn vì querySelector nhiều lần cũng k tốt, và nhược điểm của 2 cách sẽ phải sửa code nhiều chỗ mỗi khi cập nhật currentIndex
+                    => nên tạo thêm 1 hàm, hoặc prop (object.defineProperty) để cập nhật index: vừa thực hiện add/remove '.active' vừa thay đổi currentIndex
+        - Xử lý scroll activeSong into view: tránh để song đang active trôi xuống dưới k thấy:
+                -> Element.scrollIntoView: https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoView
+            + Lỗi lớn nhất: do phần dashboard để giống kiểu stickey để cuộn lên đc dẫn đến việc vài bài đầu bị ẩn dưới dashboard, chưa đc video xử lý
+            -> Cách 1: tìm cách sao cho nó cách được 1 khoảng để k bị ẩn dưới phần dashboard
+            -> Cách 2: chấp nhận sửa code html :<, sửa nhiều đấy rồi cả phần js nữa nên khó
+        - Play song when click:
+            + Tạo css .song:active có opacity còn 0.8 thôi (tạo cảm giác nhấn)
+            + Không nên thêm onclick vào các song trong hàm render: https://youtu.be/vAecGPWxzFE?t=5251 (đơn giản nhưng không tốt trong thực tế, có thể render trong 
+            tương lai khi thêm bài hát, ...)
+            + Sử dụng onclick vào playList để next bài sao cho: 
+                Chỉ khi click vào VÙNG KHÁC OPTION của SONG KHÔNG ACTIVE mới chuyển 
+                -> (option của song nào cũng đều k next mà sẽ thực hiện chức năng của option, còn khi khác option thì chỉ có song not active mới chuyển)
+                -> Diễn giải điều kiện thành code: (khó hiểu nhất closest thôi, xem trong ảnh syntax + example trước)
+                    if (e.target.closest('.option')) {  // nếu là option: cái này giống như nếu click vào option hoặc con của option đều trả về option
+                        TODO: xử lý khi click vào option, ở đây chưa làm tới
+                    } else if (e.target.closest('.song:not(.active)')) { // nếu khác option rồi thì chỉ click vào song không active mới nhận chuyển bài
+                        // Thực hiện chuyển bài
+                    }
+                    
+                => Vì chưa xử lý option nên ta có thể gọn code thành:
+                    if (!e.target.closest('.option') && e.target.closest('.song:not(.active)')) {
+                        // Thực hiện next bài đó: thêm attribute data-index vào hàm render lúc render đối tượng để lấy đc index bài
+                        const songNode = e.target.closest('.song:not(.active)'); // song mà mình click vào nó / con của nó trừ option
+                        // console.log(songNode.getAttribute('data-index'));   // đều ra index của song mình click vào
+                        // console.log(songNode.dataset.index);                // đều ra index của song mình click vào
+                        _this.updateCurIndex = Number(songNode.dataset.index); // dataset.index là chuỗi, do mình truyền vô setter nên k có cũng k lỗi, nhưng chú ý
+                        _this.loadCurrentSong();
+                        audio.play();   // nhớ audio luôn đi kèm với loadCurrentSong() (phát nhạc sau khi load thông tin mới)
+                    } 
+            ==> Chốt lại: chú ý element.closest(), chú ý thêm data-index và có thể lấy bằng getAttribute('data-index') hoặc dataset.index, chú ý ép Number(dataset.index) (setter như
+            mình thì không lỗi những lưu ý), audio.play() luôn đi kèm loadCurrentSong()
+        - Thêm config setting để lưu những mode như random, repeat, ...(sau này nếu có thêm): nếu load lại page vẫn ok
+                    <Thêm ở localStorage trước làm MTBS cũng từng gặp phần booking ấy, vào devtools-> application-> Storage -> localStorage>
+            + Thêm const PLAYER_STORAGE_KEY và prop config: JSON.parse(localStorage.getItem(PLAYER_STORAGE_KEY)) || {}
+            + Thêm hàm setConfig(key, value) và dùng nó ở onclick repeatBtn và randomBtn
+            + Thêm hàm loadConfig và gọi nó đầu hàm start(), tuy nhiên khi load trang nếu có random hay repeat thì button nó vẫn k đổi màu vì thiếu bước toggle để màu sáng 
+            (được thực hiện ở onclick)
+                -> Thêm vào sau khi loadConfig: để tạm cuối hàm start() theo F8, rảnh clean lại sau
+        
+    ** Toast Message: Phần mở rộng của BEM (Block Element Modifier): https://fullstack.edu.vn/learning/javascript-co-ban?id=ffd00274-8d59-422a-a88d-970863469424
+        -> Chủ yếu tự xem code thôi, chỉ note những ý quan trọng:
+            - Thêm grow tránh dấu close dính vào chữ: https://youtu.be/7c7ABhaQJGM?t=616
+            - Sau khi format xong thì chuyển #toast thành absolute/fixed để nó ở bên phải (chú ý right: tầm 32px) và chỉ hiện khi click
+            - Để nó trượt từ ngoài vào: keyframe cũng đc sao á, nhưng video dùng transform: translateX(calc(100% + 32px)): https://youtu.be/7c7ABhaQJGM?t=730
+                -> à không, transform để hướng dẫn, chứ dùng animation + keyframe nhé:
+                    @keyframes slideToLeft {
+                        from {
+                            opacity: 0;
+                            transform: translateX(calc(100% + 32px));
+                        }
+                        to {
+                            opacity: 1;
+                            transform: translateX(0);
+                        }
+                    }
+                -> kết hợp hiệu ứng mờ dần trong 1s sau khi hiển thị 3s: chú ý phải thêm forwards vào để mờ xong là mờ luôn k hiện lại
+                    @keyframes fadeOut {
+                        /* Có thể bỏ from do keyframes trước đã opacity: 1 khi kết thúc rồi */
+                        from {
+                            opacity: 1;
+                        }
+                        to {
+                            opacity: 0;
+                        }
+                    }
+                    và dùng: animation: slideToLeft 0.3s ease-out, fadeOut 1s linear 3s forwards;
+            => Chú ý: F8 chưa để ý đến icon các loại toast khác nhau mà đến js mới làm, ta cứ làm css trước đi rồi vào js copy code vẫn dễ hơn
+                Phần này tự làm nên chú ý phải xem code html, sửa thẻ i chứa icon, có thể vào js set type gì để ifel hoặc tạo sẵn 1 array lưu nội dung các loại icon
+            - Tạo các nút, thêm script vào để bấm nút sẽ show ra toast:
+                + Các code trên html ta để lầm mẫu show cho dễ code, còn js nó tạo rồi render lại nhưng code cũ vẫn chạy 1 lần, nên comment lại
+                + Chú ý xem cách tạo element con cho 1 element, có thể dùng innerHTML, có thể tạo thẻ con kiểu toastItem = document.createElement('div'), toast.classList.add(classA, classB, ...), 
+                    parentElement.appendChild(toast)
+                -> Nếu để appendChild thì có thể append nhiều con, thẻ mới hiện trong khi thẻ cũ chưa ẩn, còn innerHTML thì ko bị thế (thay cái mới cho cái cũ), tuy nhiên nhiều khi ta muốn mỗi type toast sẽ
+                    hiện thị khác nhau chứ không đè mất cái cũ
+                + Tạo hàm toast() và array lưu class của các icons tương ứng, tạo attribute events cho các nút trong html với các phương thức tương ứng rồi định nghĩa phương thức trong js
+                + Xử lý duration (thời lượng hiển thị sau đó ẩn đi, ta mặc định code ở css, giờ chuyển qua sửa ở js):
+                    -> Vấn đề: khi dùng innerHTML thì cái mình định gán vào chỉ là 1 STRING, không phải DOM Element nên k set .style được -> buộc dùng cách kia thôi
+                + Sau khi dùng appendChild thì phải xử lý việc con cũ k biết mất, con mới thêm vào sau hiển thị bên dưới -> k mong muốn
+                    -> dùng setTime sau thời gian duration + 1000 là tgian biến mất dần nữa để .removeChild (.remove là cả main đấy), thêm transition vào cho mượt nữa
+                    -> kết quả là sau khi mất đi phần tử dưới sẽ dịch lên thế chỗ đó 
+            - Xử lý close toast:
+                + Vấn đề: nghĩ đơn giản là query ra các nút close rồi khi ấn vào sẽ remove toast chứa nó đi (có thể dùng closest) nhưng không đc vì hình như do lúc đầu không có đối tượng
+                và nó chỉ xuất hiện sau khi bấm nút, không rõ viết query trong hàm nó lấy từ bao giờ, vì thử nó toàn ra null, vậy nên làm theo f8: https://youtu.be/7c7ABhaQJGM?t=1903
+                + Thêm onclick vào chính toastItem lúc tạo, theo logic nhận event khi click vào thẻ toast (cha của closeBtn) và ktra nếu trúng nút close (closet(.toast__close)) thì main.removeChild
+                    -> Chú ý phần trước đã setTimeout để remove tự động nó đi, nên nếu xóa thủ công trước thì sau sẽ lỗi khi xóa tự động
+                    -> Chuyển setTimeout lên trước onclick rồi đặt vào biến, rồi ở phần xóa thủ công sẽ clearTimeout
+
+                
