@@ -118,13 +118,19 @@ header h2 {
     -webkit-transition: 0.2s;
     cursor: pointer;
     transition: opacity 0.2s;
+    /* Thêm phân biệt vùng đã chọn và chưa bằng backgroundImage, backgroundSize */
+    background-image: linear-gradient(var(--primary-color), var(--primary-color));
+    background-repeat: no-repeat;
+    background-size: 1% 100%; /* 1% là do value ban đầu mặc định là 1, sửa thêm ở js */
 }
 
 .progress::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
     width: 12px;
-    height: 6px;
+    /* height: 6px; */ /* Bỏ dạng dẹt sang dạng tròn */
+    height: 12px;
+    border-radius: 50%;
     background-color: var(--primary-color);
     cursor: pointer;
 }

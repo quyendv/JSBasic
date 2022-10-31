@@ -76,7 +76,7 @@
     - Primitive Data: Number, String, Boolean, Null, Undefined, Symbol
     - Complex Data / Reference Type: Function, Object
 
-    - Type casting (ép kiểu): Type(oldValue), VD: let x = Number('100'), let y = String(10) or 10.toString(). Có thể dùng prefix '+' trước đối tượng để convert sang number
+    - Type casting (ép kiểu): Type(oldValue), VD: let x = Number('100'), let y = String(10) or 10.toString(). Có thể dùng prefix '+' trước đối tượng để convert sang number, hoặc parseInt(...)
 
     ** Number:
         - Quan trọng nên phải viết lên đầu: ktra 1 tham số có phải số hay k (kiểu number). Nếu dùng typeof param === 'number' thì NaN hay biểu thức trả về NaN cũng vẫn đúng
@@ -382,22 +382,24 @@
                     -> Tham số thứ 2 là số phần tử bị xóa
                     -> Các tham số sau là các phần tử thêm vào
                     ==> mảng thành [Banana, Orange, Lemon, Kiwi, Apple, Mango]
-                    Ta cũng có thể dùng splice() để vừa thêm vừa xóa.
+                    => Ta cũng có thể dùng splice() để vừa thêm vừa xóa.
+                    !important: splice() ghi đè mảng gốc chứ k tạo mới như slice
 
                     const fruits = ["Banana", "Orange", "Apple", "Mango"];
                     fruits.splice(2, 2, "Lemon", "Kiwi");       -> Banana, Orange, Lemon, Kiwi
 
                 + Delete 1 phần tử ngẫu nhiên: delete primes[2];  // Xóa phần tử thứ 3 -> xóa kiểu này length không đổi, value rỗng thôi
-                    -> Bản chất lại cắt mảng cũ thành mảng mới: những phần tử bị bỏ lại k lấy nên coi như xóa thôi
-                    -> Sử dụng slice(startIndex, endIndex):   // index nhận giá trị âm (là từ cuối mảng nhé)
+                    => Dùng splice(): lưu ý ghi đè mảng cũ, có thể dùng cho cả thêm và xóa 1/nhiều phần tử
+                    -> Sử dụng splice(startIndex, endIndex):   // index nhận giá trị âm (là từ cuối mảng nhé)
                     const fruits = ["Banana", "Orange", "Apple", "Mango"];
                     fruits.splice(0, 1);    -> xóa 1 phần tử đầu
 
-                    -> Slice(startIndex) có thể dùng để cắt thành 1 mảng mới, vd:
+                + Cắt mảng, subarray, hoặc copy bằng slice(0):
+                    -> Slice(startIndex) có thể dùng để cắt thành 1 MẢNG MỚI, vd:
                     const fruits = ["Banana", "Orange", "Lemon", "Apple", "Mango"];
                     const citrus = fruits.slice(1); -> cắt từ phần tử index 1
                     Tuy nhiên sao chép mảng có thể dùng spread operator thay vì arr1.slice(0)
-                    -> Lưu ý slice() tạo mảng mới, k thay đổi trên mảng cũ
+                    -> Lưu ý slice() tạo mảng mới, k thay đổi trên mảng cũ như splice()
 
                 + Xóa toàn bộ mảng: gán cho nó mảng rỗng [] hoặc đặt length thành 0.
             - other function built-in: xem Bài 2 phần F trở xuống: https://viblo.asia/p/kieu-du-lieu-trong-javascript-L4x5xLXg5BM#_f-array-2-20
@@ -616,6 +618,7 @@
     ** Date getter, setter: xem thêm https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date
         - Get method: <chú ý month và day tính từ 0, sunday là 0)
                 let d = new Date("2001-08-27");
+                Date.now() giống getTime() thì phải??
                 d.getTime();  // Số miligiây từ 1/1/1970 00:00:00 UTC
                 d.getFullYear();  // 2001
                 d.getMonth();  // 7, vì tháng 8 là index 7, nên thường dùng kiểu getMonth() + 1 cho đúng :D
@@ -650,7 +653,7 @@
                 let d2 = new Date()
                 let days_between = (d2.getTime() - d1.getTime()) / (1000 * 3600 * 24) // trên stackoverflow họ làm tròn lên hoặc xuống : Math.ceil() or Math.floor()
 
-1. Scope:
+1. Scope: xem thêm phần advance nữa nhé
     * Global scope: 
         - Các đối tượng, biến, hằng, hàm, object,... được khai báo bên ngoài tất cả function, block thì có global scope. Lúc này chỉ khi đóng tab trình duyệt thì đối tượng global mới bị hủy.
             // Here is global
@@ -776,6 +779,7 @@
 
         - Loại bỏ phần tử trùng lặp trong mảng: arr = [1, 2, 3, 2, 3, 1]
             --> newArr = [...(new Set(arr))] // ở đây new Set(arr) sẽ trả về {1, 2, 3} lúc này dùng spread để tách các phần tử obj ra và cặp [] để ép thành mảng
+            --> Cũng có thẻ dùng Array.from(new Set(arr)) thay cho [...] tạo mảng bằng spread
     ** Gộp, nối mảng:
         - concat: arr1 = arr1.concat(arr2) hoặc arr3 = [].concat(arr1, arr2), arr3 = arr1.concat(arr2)
         - spread: arr1.push(...arr2) hoặc arr3 = [...arr1, ...arr2]
@@ -784,14 +788,13 @@
         - Object.assign({}, ['a','b','c']); // {0:"a", 1:"b", 2:"c"}
         - { ...['a', 'b', 'c'] }            // { '0': 'a', '1': 'b', '2': 'c' }
         - ['a', 'b', 'c'].reduce((a, v) => ({ ...a, [v]: v}), {})   // { a: "a", b: "b", c: "c" }
-            --> chú ý dòng trên dùng arrow function thì phải bọc () cho cụm { ...a, [v]: v} nếu không sẽ lỗi vì {} phải return
+            --> chú ý dòng trên dùng arrow function thì phải bọc () cho object, tức cụm { ...a, [v]: v} nếu không sẽ lỗi vì {} phải return
             --> Cách trên có thể tường minh thành:
                 arr.reduce((obj, value) => {
                     obj[value] = value; 
                     return obj;
                 }, {})
             --> ứng dụng cho dạng bài này trên f8: https://fullstack.edu.vn/learning/javascript-co-ban?id=bbd77fd0-8fe0-4bee-862d-40a70e1d1fa7
-
 
 *** DOM: https://viblo.asia/p/javascript-dom-4P856LDBZY3#_1-finding-elements-4
          https://fullstack.edu.vn/learning/javascript-co-ban?id=107c0734-b92e-43a6-bf7b-f62ece5972eb
@@ -813,7 +816,7 @@
                 - querySelector()               // trả về 1 phần tử đầu tiên (nếu có nhiều), dạng object (node object kiểu là 1 phần tử của NodeList), k tìm thấy return null, throw SYNTAX_ERR nếu chuỗi sai
                 - querySelectorAll()            // trả về 1 NodeList, throw SYNTAX_ERR nếu chuỗi sai
                 - document.forms // trả về 1 HTMLCollection, ta cũng có thể lấy phần tử thứ bao nhiêu kiểu document.forms[0 or 1, 2, ...]
-                hoặc có thể dùng document.forms['key'] hoặc forms.key với key trùng với id của form. Ngoài forms còn có links, images, ...
+                hoặc có thể dùng document.forms['key'] hoặc forms.key với key trùng với id của form hoặc name. Ngoài forms còn có links, images, ...
                 Áp dụng ta có document.anchors trả về tất cả thẻ a có thuộc tính name (tức attribute name="...")
             --> HTMLcollection & NodeList có dạng giống mảng, cũng có length, iterable tuy nhiên k có map, reduce, filter, ... các thứ thôi
                 CHÚ Ý: những method trả về HTMLCollection hoặc NodeList dù chỉ có 1 phần tử nó cũng vẫn là dạng gần như mảng, chứ k phải phần tử
@@ -1023,7 +1026,7 @@
             3. Một số ví dụ thường dùng trong thực tế:
                 - input text: 
                     let inputText = document.querySelector('input[type="text"])
-                    inputText.onchage = function (e) {
+                    inputText.onchange = function (e) {
                         console.log(e.target.value)    // .value để lấy nội dung, onchange sẽ chạy khi nội dung thay đổi và ta blur ra ngoài
                     }
 
@@ -1033,13 +1036,13 @@
 
                 - input checkbox (hoặc radio):
                     let inputCheck = document.querySelector('input[type="checkbox"])
-                    inputCheck.onchage = function (e) {
+                    inputCheck.onchange = function (e) {
                         let isCheck = e.target.checked // .checked để ktra xem đã tích chưa, return T/F
                     }
 
                 - select:
                     let select = document.querySelector('select')
-                    select.onchage = function (e) {
+                    select.onchange = function (e) {
                         console.log(e.target.value)    // lấy ra value của option hiện tại, lưu ý thẻ select gồm nhiều thẻ <option value="value1">1</option> thì .value nó trả về 'value1' chứ k phải cái ta nhìn thấy là '1'
                     }
                 
@@ -1608,7 +1611,7 @@
 *** ECMAScript6 - ECMAScript 2015 - ES6
     ** let & const: (https://viblo.asia/p/phan-biet-kieu-bien-var-let-va-const-trong-javascript-ORNZqaOnZ0n)
         * Var:
-            - Có thể truy cập global (phạm vi là global scoped), dù cho có khởi tạo ở scope block nào thì vẫn có thể gọi ở bên ngoài scope đó
+            - Có thể truy cập global (phạm vi là global scoped), dù cho có khởi tạo ở scope block nào thì vẫn có thể gọi ở bên ngoài scope đó (tức là khai báo trong cặp {} đều có thể truy cập bên ngoài). Tuy nhiên nếu được khai báo trong function thì sẽ có phạm vi là function/locally scope và k truy cập đc bên ngoài
                     {
                         var x = 'inner scope'
                     }
@@ -1712,7 +1715,7 @@
                                 line4`...
 
     ** Arrow function: đã nói ở phần function nhé, vẫn dùng đó
-        - Lưu ý nhỏ khi return object thôi, ở phần spread operator đã nói rồi ấy
+        - Lưu ý nhỏ khi return object thôi (phải bọc () lấy object), ở phần spread operator đã nói rồi ấy
                     const createObject = function(a, b) {
                         return {
                             a: a,
@@ -1950,9 +1953,12 @@
                 file index.js:  import logger from './logger.js'
                                 export default logger;
                 -> tắt thành:   export { default } from './logger.js'
+                    -> có thể default as newName được nhé
 
                 file main.js chỉ cần: import logger from './logger/index.js'
+                => Chú ý rằng do trong react 1 folder có file index.js thì import đến folder đó nó tự hiểu là đến file index.js
 
+            --> Ta có thể export * from ... rồi trong file cần dùng import {cái cần dùng trong * là được}: https://youtu.be/GE4jeED9B1s?t=846
             --> muốn kiểu khác (import kiểu destructuring) thì có thể 
                     sửa file index.js thành export { default as logger2 } from './logger.js'
                     và  file main.js  thành import { logger2 } from './logger/index.js';    // lúc này dùng logger2 thay logger bên trên
@@ -2195,8 +2201,85 @@
             - Xử lý close toast:
                 + Vấn đề: nghĩ đơn giản là query ra các nút close rồi khi ấn vào sẽ remove toast chứa nó đi (có thể dùng closest) nhưng không đc vì hình như do lúc đầu không có đối tượng
                 và nó chỉ xuất hiện sau khi bấm nút, không rõ viết query trong hàm nó lấy từ bao giờ, vì thử nó toàn ra null, vậy nên làm theo f8: https://youtu.be/7c7ABhaQJGM?t=1903
+                -> Chưa thử nhưng có thể thử $ ra closeBtn ngay lúc tạo để nếu click vào thì close, rồi xử lý như cũ, nhưng bản chất nó giống cách trên
                 + Thêm onclick vào chính toastItem lúc tạo, theo logic nhận event khi click vào thẻ toast (cha của closeBtn) và ktra nếu trúng nút close (closet(.toast__close)) thì main.removeChild
                     -> Chú ý phần trước đã setTimeout để remove tự động nó đi, nên nếu xóa thủ công trước thì sau sẽ lỗi khi xóa tự động
                     -> Chuyển setTimeout lên trước onclick rồi đặt vào biến, rồi ở phần xóa thủ công sẽ clearTimeout
+*** Form Validation:
+    * Tự xem code nhé:
+        - Chú ý cách querySelector cho phần tử dạng anh em: curElement.parentElement.querySelector('otherChild')
+        - Ktra email hợp lệ: validate email js: https://www.w3resource.com/javascript/form/email-validation.php
+                    let regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+                    return regex.test(email) // hàm test của đối tượng regex, return true if is an email, else...
+        - Hàm xác nhận lại mật khẩu: isConfirmed nhớ truyền cả id form rồi đến id password_confirmation để biết của form nào nhé
+        - Thêm đối số message vào các hàm đã tạo trước đó thể có thể tùy chỉnh message nếu muốn, không thì là mặc định, VD:
+                    test: function (value) {
+                        console.log(value === getConfirmValue());
+                        return value === getConfirmValue()
+                            ? undefined
+                            : message || 'Giá trị nhập vào không chính xác';    // phần này đã nói rồi, nếu message truethy là lấy luôn, k thì lấy vế sau kể cả có sai
+                    },
+        - Xử lý 1 field input có thể phải check nhiều rules, nếu dùng Validator.isRequired, Validator.minLength, ... cho cùng 1 selector thì sẽ bị ghi đè bởi rule sau
+            -> https://youtu.be/scybnB9vYVQ?t=667
+                    // Lưu các rule dưới dạng 1 object {key: value} với key là các selector<các input muốn check> và value là 1 array lưu các hàm cần test (isRequired, isConfirmed, ...)
+                    let selectorRules = {};
 
-                
+                    options.rules.forEach(rule => {
+                        // Lưu lại các rule cho mỗi inputElement
+                        if (Array.isArray(selectorRules[rule.selector])) {
+                            selectorRules[rule.selector].push(rule.test);
+                        } else {
+                            selectorRules[rule.selector] = [rule.test];
+                        }
+                    }
+                và trong hàm validate (xử lý onblur): tự xem, đưa code vào đây rối
+        - Xử lý onsubmit:
+            + e.preventDefault() chặn việc lỗi khi nộp form trống
+            + ktra xem form có valid không bằng cách duyệt qua từng rule (return !errorMsg)
+            + Lấy danh sách các thẻ input (chú ý cách selector vì muốn lấy cả thẻ select nên dùng attr name), trả về NodeList tuy nhiên sẽ k có các method như map, reduce, ...
+                -> phải dùng Array.from(truyền NodeList vào), rồi dùng reduce lấy ra object dạng {input.name: input.value} -> xem code dùng nhiều cách
+
+                        if (isFormvalid) {
+                            let formValues = Array.from(enableInputs).reduce(function (values, input) {
+                                // values[input.name] = input.value;
+                                // return values;
+
+                                // hoặc gọn hơn kết hợp toán tủ logic:
+                                // return (values[input.name] = input.value) && values; // Chú ý luôn auto return values nhé vì ở đây check input.value khác undefined rồi nên xét đến cuối là values;
+
+                                return { ...values, [input.name]: input.value }; // nếu return thì như vậy, còn arrow function thì phải ngoặc nhọn cụm {...}
+                            }, {});
+                            // console.log(formValues);
+                            options.onsubmit(formValues); // thêm option trong onsubmit trong file html nhé
+                        }
+        - Sửa lỗi: 
+            + Không nên dùng cách 2 return (values[input.name] = input.value) && values vì nếu field k có yêu cầu gì(có thể điền rỗng) -> falsy => không return đc values
+                -> Dùng cách 1 hoặc 3 thì k sao
+            + K nên dùng inputElement.parentElement.querySelector('.form-message'): từ inputElement trỏ đến THẺ CHA TRỰC TIẾP rồi trỏ đến form-message cùng cấp
+                -> nếu inputElement và form-message không cùng cấp nữa sẽ sai, đôi khi input bọc trong nhiều thẻ khác cơ
+                -> Tạo hàm getParent, chú ý hàm matches, có thể dùng classList.contains cũng được, hoặc dùng closest() bản chất vẫn thế mà nhỉ
+                        while(element.parentNode) {
+                            if (element.parentNode.matches(selector)) {
+                                return element.parentNode;
+                            }
+                            element = element.parentNode;
+                        }
+                    => Từ nay khi muốn trỏ đến formMsg qua inputElement thì dùng getParent() nhé, sửa cả cho thêm class invalid vào formGroup và chỗ oninput cũng dùng getParent chứ k phải .parentElement nữa
+                -> Thử thay thế bằng closest vẫn đúng nhé
+            + Xử lý với input checkbox, radio (cùng name chỉ chọn 1), ...
+                -> Thêm code html và css cho phần Giới tính: chú ý code thêm vào xem để Hiểu
+                -> Ta có thể thêm checked vào 1 input radio để nó luôn pick sẵn 1 giới tính nên k cần ktra, tuy nhiên thực tế mong muốn người dùng k vô tình bỏ qua nên phải xử lý
+                -> Truyền vào isRequired selector của 3 thẻ input bằng input[name="gender"] nhưng code hiện tại chưa xử lý đc vì nó chỉ lấy input đầu tiên và ktra value có rỗng k nên nếu pick Name nó sẽ k lỗi
+                    -> sửa validate: thêm switch case check radio, checkbox: nếu test(truyền vào input:checked) mà null (k có thì trả msg lỗi) nếu ra 1 object (truthy) thì k sao -> sửa rất nhiều hàm test của isRequired, tự xem
+                    -> Tuy nhiên do inputElement toàn dùng $ chứ k dùng $$ nên input radio có nhiều thẻ lại chỉ check thẻ đầu, sửa tiếp thành $$ rồi Array.from(NodeList)forEach
+                        -> sửa chỗ lấy inputElement rồi dùng onblur, oninput ấy, chứ phần ktra isFormValid k cần vì sửa validate riêng cho radio rồi
+                        -> Hàm onsubmit lấy thông tin phải sửa lại vì sau khi isFormValid = true nó duyệt tất cả input để lấy value và input radio nó sẽ duyệt cái cuối lấy value cái cuối cùng đó (auto là other) nên phải xử lý radio riêng trong chỗ reduce
+                            -> xử lý riêng TH radio/checkbox: dùng đk .check hoặc matches(":checked") hoặc gán bằng $ thẻ input đã checked
+            + Xử lý select: vì thẻ select có các thẻ option cũng có attribute value nên chỉ cần để value trống là lỗi isRequired rồi, có value mới k lỗi như các thẻ KHÁC
+                -> Xong luôn k cần sửa, à nếu thêm xử lý onchange để nếu select vào option value trống cũng lỗi luôn nhé
+            + Xử lý input checkbox: Thử thay radio bằng checkbox vẫn được những checkbox có thể chọn nhiều nên cần Sửa
+                -> sửa onsubmit phần checkbox: xem code, cũng hơi phức tạp đấy, và thường là sẽ bắt buộc nhé, chứ nếu k bắt buộc thì code đấy nó bỏ qua luôn field name của checkbox trong data trả về
+            + Xử lý input dạng file: mặc định value của input type='file' là đường dẫn thì kết quả trả về chỉ là đường dẫn file, k dùng được nên phải chỉnh
+                -> onsubmit thêm case 'file': values[input.name] = input.files (nhớ có 's'); break;
+    * Validation2:
+        -> Tự xem code với k hiểu thì xem lại video, giải thích mệt vc :<

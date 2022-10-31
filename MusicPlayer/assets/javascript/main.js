@@ -127,9 +127,7 @@ const app = {
                     <div
                         class="thumb"
                         style="
-                            background: url('${
-                                song.image
-                            }') no-repeat center / cover;
+                            background: url('${song.image}') no-repeat center / cover;
                         "
                     ></div>
                     <div class="body">
@@ -152,8 +150,7 @@ const app = {
         const cdWidth = cd.offsetWidth;
 
         document.onscroll = function () {
-            const scrollTop =
-                window.scrollY || document.documentElement.scrollTop;
+            const scrollTop = window.scrollY || document.documentElement.scrollTop;
             const newCdWidth = cdWidth - scrollTop;
 
             cd.style.width = newCdWidth > 0 ? `${newCdWidth}px` : 0; // 0 thì k cần px
@@ -161,13 +158,10 @@ const app = {
         };
 
         // Xử lý quay CD:
-        const cdThumbAnimate = cdThumb.animate(
-            [{ transform: 'rotate(360deg)' }],
-            {
-                duration: 10000, // 10s
-                iterations: Infinity,
-            }
-        );
+        const cdThumbAnimate = cdThumb.animate([{ transform: 'rotate(360deg)' }], {
+            duration: 10000, // 10s
+            iterations: Infinity,
+        });
         cdThumbAnimate.pause();
 
         // Xử lý click play button
@@ -196,16 +190,16 @@ const app = {
         audio.ontimeupdate = function () {
             if (audio.duration) {
                 // Có lúc duration = 0 do bài hát chưa tải xong hay sao ấy, chia ra NaN nên thêm đk vào
-                const progressPercent = Math.floor(
-                    (audio.currentTime / audio.duration) * 100
-                );
+                const progressPercent = Math.floor((audio.currentTime / audio.duration) * 100);
                 progress.value = progressPercent;
+                progress.style.backgroundSize = `${progressPercent}% 100%`; // Chú ý thêm phần này để phân biệt phần đã và chưa chạy
             }
         };
 
         // Xử lý tua audio
-        // -> onchange hay oninput đều được nhé
-        progress.onchange = function () {
+        // -> onchange hay oninput đều được nhé, nhưng oninput hình như tốt hơn, k bị tua mà nó cứ quay về chỗ cũ
+        // -> trên mạng ngta cũng dùng input chứ k dùng change (do change phải blur ra ngoài mới nhận ấy nên lỗi đúng rồi)
+        progress.oninput = function () {
             // console.log(this.value); // this hay e.target đều là 1 và là progress nhé
             const seekTime = (audio.duration * this.value) / 100;
             audio.currentTime = seekTime;
@@ -264,10 +258,7 @@ const app = {
         // (option của song nào cũng đều k next mà sẽ thực hiện chức năng của option, còn khi khác option thì chỉ có song not active mới chuyển)
         // Nếu chưa hiểu rõ có thể xem file note hoặc ảnh để rõ hơn. (chưa xử lý option nên gộp đk thôi)
         playList.onclick = function (e) {
-            if (
-                !e.target.closest('.option') &&
-                e.target.closest('.song:not(.active)')
-            ) {
+            if (!e.target.closest('.option') && e.target.closest('.song:not(.active)')) {
                 // Thực hiện next bài đó: Nhớ thêm attribute "data-index" vào chỗ render ấy để lấy index song
                 const songNode = e.target.closest('.song:not(.active)'); // song mà mình click vào nó / con của nó trừ option
                 // console.log(songNode.getAttribute('data-index'));   // đều ra index của song mình click vào
@@ -317,8 +308,7 @@ const app = {
     },
 
     prevSong: function () {
-        this.updateCurIndex =
-            (this.currentIndex - 1 + this.songs.length) % this.songs.length;
+        this.updateCurIndex = (this.currentIndex - 1 + this.songs.length) % this.songs.length;
         this.loadCurrentSong();
     },
 
